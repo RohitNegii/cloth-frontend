@@ -1,5 +1,9 @@
-import React from "react";
 
+"use client"
+import React from "react";
+import { FaInstagram } from "react-icons/fa";
+
+// TODO: Replace with data from a backend
 const socialImages = [
   "https://images.unsplash.com/photo-1521334884684-d80222895322?auto=format&fit=crop&w=400&q=80",
   "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=400&q=80",
@@ -11,53 +15,49 @@ const socialImages = [
 
 export default function SocialMediaFeed() {
   return (
-    <section className="max-w-7xl mx-auto px-6 py-16 bg-[var(--background-light)] rounded-3xl shadow-xl">
-      <h2 className="text-3xl font-extrabold text-[var(--primary-brand)] mb-6 text-center tracking-wide relative inline-block">
-        Follow Us on Instagram
-        <span className="block w-20 h-1 bg-gradient-to-r from-[var(--buttons-highlight)] to-[var(--secondary-accent)] rounded-full mt-2 mx-auto"></span>
-      </h2>
+    <section className="py-24 bg-[var(--background-light)]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl md:text-5xl font-extrabold text-[var(--primary-brand)] tracking-tight">
+            Follow Us on Instagram
+          </h2>
+          <p className="mt-4 text-lg text-[var(--text-secondary)] max-w-2xl mx-auto">
+            Get a glimpse of our latest collections and behind-the-scenes content.
+          </p>
+        </div>
+        
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
+          {socialImages.map((url, idx) => (
+            <a
+              href="https://instagram.com/yourbrand" // Replace with your Instagram URL
+              target="_blank"
+              rel="noopener noreferrer"
+              key={idx}
+              className="group relative block overflow-hidden rounded-lg shadow-lg aspect-square"
+            >
+              <img
+                src={url}
+                alt={`Instagram post ${idx + 1}`}
+                className="w-full h-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-110"
+                loading="lazy"
+              />
+              <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300">
+                <FaInstagram className="text-white text-5xl transform scale-0 group-hover:scale-100 transition-transform duration-300 ease-out" />
+              </div>
+            </a>
+          ))}
+        </div>
 
-      {/* Responsive horizontal scroll on small, grid on md+ */}
-      <div className="flex gap-6 overflow-x-auto scrollbar-hide md:grid md:grid-cols-6 md:gap-6 py-2">
-        {socialImages.map((url, idx) => (
+        <div className="text-center mt-16">
           <a
-            href="https://instagram.com/yourbrand"
+            href="https://instagram.com/yourbrand" // Replace with your Instagram URL
             target="_blank"
             rel="noopener noreferrer"
-            key={idx}
-            className="relative flex-shrink-0 w-[160px] h-[220px] md:w-auto md:h-auto rounded-2xl border-4 border-transparent bg-gradient-to-tr from-[var(--buttons-highlight)] to-[var(--secondary-accent)] p-1 shadow-lg transform transition duration-500 hover:shadow-2xl hover:scale-105"
+            className="inline-block bg-[var(--buttons-highlight)] text-white px-10 py-4 rounded-full font-bold text-lg hover:bg-opacity-90 transition-all duration-300 transform hover:scale-105 shadow-xl"
           >
-            <img
-              src={url}
-              alt="Social media post"
-              className="w-full h-full object-cover rounded-xl"
-              loading="lazy"
-            />
-
-            {/* Instagram icon overlay with subtle animation */}
-            <div className="absolute inset-0 bg-black bg-opacity-25 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300 rounded-xl">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-10 h-10 text-white filter drop-shadow-lg scale-90 hover:scale-110 transition-transform duration-300"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={1.5}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M7.5 2h9A5.5 5.5 0 0122 7.5v9a5.5 5.5 0 01-5.5 5.5h-9A5.5 5.5 0 012 16.5v-9A5.5 5.5 0 017.5 2z"
-                />
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M15 11.5a3 3 0 11-6 0 3 3 0 016 0z"
-                />
-              </svg>
-            </div>
+            Follow @UncommonThreads
           </a>
-        ))}
+        </div>
       </div>
     </section>
   );

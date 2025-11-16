@@ -1,4 +1,6 @@
 @import "tailwindcss";
+
+
 :root {
   --primary-brand: #2b2d31;
   --secondary-accent: #d9c8a0;
@@ -13,27 +15,4 @@ body {
   background: var(--background-light);
   color: var(--text-primary);
   font-family: 'Inter', sans-serif;
-}
-
-.brand-header {
-  background: linear-gradient(120deg, var(--primary-brand) 60%, var(--contrast-dark) 100%);
-  color: var(--secondary-accent);
-}
-
-.futuristic-shape {
-  clip-path: polygon(0 0, 100% 0, 95% 100%, 5% 100%);
-  background: var(--primary-brand);
-  border-radius: 1em 4em 1em 4em;
-  padding: 1rem 2rem;
-  color: var(--secondary-accent);
-}
-
-.unique-btn {
-  background: var(--buttons-highlight);
-  border-radius: 1.5em 0.5em 1.5em 0.5em;
-  padding: 0.7em 1.7em;
-  color: var(--background-light);
-  box-shadow: 0 2px 8px var(--contrast-dark);
-  font-weight: bold;
-  font-variation-settings: "wght" 600;
 }

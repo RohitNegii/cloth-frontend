@@ -1,153 +1,91 @@
+
 import React from "react";
 import Link from "next/link";
+import { FaInstagram, FaFacebookF, FaTwitter } from "react-icons/fa";
 
 export default function Footer() {
+  const socialLinks = [
+    { href: "https://instagram.com/uncommon_threads", icon: FaInstagram },
+    { href: "https://facebook.com/uncommon_threads", icon: FaFacebookF },
+    { href: "https://twitter.com/uncommon_threads", icon: FaTwitter },
+  ];
+
+  const footerLinks = {
+    Shop: [
+      { href: "/collections", label: "Collections" },
+      { href: "/new-arrivals", label: "New Arrivals" },
+      { href: "/sale", label: "Sale" },
+      { href: "/about", label: "About Us" },
+    ],
+    "Customer Service": [
+      { href: "/contact", label: "Contact Us" },
+      { href: "/faq", label: "FAQ" },
+      { href: "/shipping", label: "Shipping & Returns" },
+      { href: "/privacy", label: "Privacy Policy" },
+    ],
+  };
+
   return (
-    <footer className="bg-[var(--primary-brand)] text-[var(--secondary-accent)] py-12 px-6">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
-        {/* Brand Info */}
-        <div>
-          <h3 className="text-2xl font-bold mb-4">UNCOMMON THREADS</h3>
-          <p className="text-[var(--text-secondary)] max-w-sm leading-relaxed">
-            Innovative, bold, and sustainable fashion. Wear the future today.
-          </p>
-        </div>
-
-        {/* Navigation */}
-        <div>
-          <h4 className="font-semibold mb-4">Shop</h4>
-          <ul className="space-y-2 text-[var(--secondary-accent)]">
-            <li>
-              <Link
-                href="/collections"
-                className="hover:text-[var(--buttons-highlight)]"
-              >
-                Collections
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/new-arrivals"
-                className="hover:text-[var(--buttons-highlight)]"
-              >
-                New Arrivals
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/sale"
-                className="hover:text-[var(--buttons-highlight)]"
-              >
-                Sale
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/about"
-                className="hover:text-[var(--buttons-highlight)]"
-              >
-                About Us
-              </Link>
-            </li>
-          </ul>
-        </div>
-
-        {/* Customer Service */}
-        <div>
-          <h4 className="font-semibold mb-4">Customer Service</h4>
-          <ul className="space-y-2 text-[var(--secondary-accent)]">
-            <li>
-              <Link
-                href="/contact"
-                className="hover:text-[var(--buttons-highlight)]"
-              >
-                Contact Us
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/faq"
-                className="hover:text-[var(--buttons-highlight)]"
-              >
-                FAQ
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/shipping"
-                className="hover:text-[var(--buttons-highlight)]"
-              >
-                Shipping & Returns
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/privacy"
-                className="hover:text-[var(--buttons-highlight)]"
-              >
-                Privacy Policy
-              </Link>
-            </li>
-          </ul>
-        </div>
-
-        {/* Social Media */}
-        <div>
-          <h4 className="font-semibold mb-4">Follow Us</h4>
-          <div className="flex space-x-4 text-[var(--secondary-accent)]">
-            <a
-              href="https://instagram.com/yourbrand"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Instagram"
-              className="hover:text-[var(--buttons-highlight)]"
-            >
-              <svg
-                fill="currentColor"
-                viewBox="0 0 24 24"
-                className="w-6 h-6"
-                aria-hidden="true"
-              >
-                <path d="M7 2C4.243 2 2 4.243 2 7v10c0 2.757 2.243 5 5 5h10c2.757 0 5-2.243 5-5V7c0-2.757-2.243-5-5-5H7zm10 2a1 1 0 110 2 1 1 0 010-2zm-5 3a5 5 0 100 10 5 5 0 000-10zM7 8a5 5 0 115 5 5.007 5.007 0 01-5-5z" />
-              </svg>
-            </a>
-            <a
-              href="https://facebook.com/yourbrand"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Facebook"
-              className="hover:text-[var(--buttons-highlight)]"
-            >
-              <svg
-                fill="currentColor"
-                viewBox="0 0 24 24"
-                className="w-6 h-6"
-                aria-hidden="true"
-              >
-                <path d="M22 12.07C22 6.5 17.52 2 12 2S2 6.5 2 12.07c0 5 3.66 9.13 8.44 9.86v-6.98h-2.54v-2.88h2.54v-2.2c0-2.51 1.49-3.89 3.78-3.89 1.1 0 2.24.2 2.24.2v2.46h-1.26c-1.25 0-1.64.77-1.64 1.56v1.86h2.8l-.45 2.88h-2.35v6.98C18.35 21.2 22 17.04 22 12.07z" />
-              </svg>
-            </a>
-            <a
-              href="https://twitter.com/yourbrand"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Twitter"
-              className="hover:text-[var(--buttons-highlight)]"
-            >
-              <svg
-                fill="currentColor"
-                viewBox="0 0 24 24"
-                className="w-6 h-6"
-                aria-hidden="true"
-              >
-                <path d="M22.46 6c-.77.35-1.6.59-2.46.69a4.3 4.3 0 001.88-2.37 8.6 8.6 0 01-2.72 1.03 4.28 4.28 0 00-7.3 3.9 12.16 12.16 0 01-8.82-4.47 4.28 4.28 0 001.33 5.7 4.24 4.24 0 01-1.94-.54v.05a4.28 4.28 0 003.44 4.2 4.3 4.3 0 01-1.93.07 4.29 4.29 0 004 2.99 8.6 8.6 0 01-5.33 1.85A8.65 8.65 0 012 18.57a12.14 12.14 0 006.57 1.93c7.88 0 12.2-6.53 12.2-12.2 0-.18 0-.35-.01-.53A8.7 8.7 0 0022.46 6z" />
-              </svg>
-            </a>
+    <footer className="bg-[var(--contrast-dark)] text-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
+          
+          {/* Brand & Socials */}
+          <div className="md:col-span-1">
+            <div>
+              <h3 className="text-2xl font-bold text-[var(--secondary-accent)] mb-4">UNCOMMON THREADS</h3>
+              <p className="text-gray-400 mb-6">
+                Innovative, bold, and sustainable fashion. Wear the future today.
+              </p>
+              <div className="flex space-x-5 mt-6">
+                {socialLinks.map(({ href, icon: Icon }) => (
+                  <a key={href} href={href} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-[var(--secondary-accent)] transition-colors duration-300">
+                    <Icon size={24} />
+                  </a>
+                ))}
+              </div>
+            </div>
           </div>
-          <p className="mt-6 text-sm text-[var(--text-secondary)]">
-            &copy; {new Date().getFullYear()} Uncommon Threads. All rights
-            reserved.
-          </p>
+
+          {/* Navigation Links */}
+          <div className="md:col-span-3 grid grid-cols-2 lg:grid-cols-3 gap-8">
+            {Object.entries(footerLinks).map(([title, links]) => (
+              <div key={title}>
+                <h4 className="font-semibold mb-4 tracking-wider uppercase text-gray-300">{title}</h4>
+                <ul className="space-y-3">
+                  {links.map((link) => (
+                    <li key={link.href}>
+                      <Link href={link.href} className="text-gray-400 hover:text-white transition-colors duration-300">
+                        {link.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+             <div>
+                <h4 className="font-semibold mb-4 tracking-wider uppercase text-gray-300">Newsletter</h4>
+                <p className="text-gray-400 mb-4">Sign up for our newsletter</p>
+                 <form>
+              <label htmlFor="email-newsletter" className="sr-only">Email for newsletter</label>
+              <div className="flex items-center">
+                <input
+                  type="email"
+                  id="email-newsletter"
+                  placeholder="Your email"
+                  className="bg-black/20 text-white w-full py-3 px-4 rounded-l-md focus:outline-none focus:ring-2 focus:ring-[var(--secondary-accent)]"
+                />
+                <button type="submit" className="bg-[var(--buttons-highlight)] hover:bg-opacity-90 px-4 py-3 rounded-r-md font-semibold transition-colors duration-300">
+                  Subscribe
+                </button>
+              </div>
+            </form>
+             </div>
+          </div>
+        </div>
+
+        <div className="mt-20 pt-8 border-t border-white/10 text-center text-gray-500 text-sm">
+          <p>&copy; {new Date().getFullYear()} Uncommon Threads. All rights reserved.</p>
         </div>
       </div>
     </footer>

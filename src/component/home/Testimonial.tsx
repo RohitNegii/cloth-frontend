@@ -1,17 +1,11 @@
+
 "use client"
 import React from "react";
 import Slider from "react-slick";
+import { FaQuoteLeft } from "react-icons/fa";
 
-
-interface Testimonial {
-  id: number;
-  name: string;
-  role: string;
-  photo: string;
-  review: string;
-}
-
-const testimonials: Testimonial[] = [
+// TODO: Replace with data from a backend
+const testimonials = [
   {
     id: 1,
     name: "Aarav Mehta",
@@ -36,6 +30,14 @@ const testimonials: Testimonial[] = [
     review:
       "The attention to detail and futuristic feel make this brand stand out from the rest.",
   },
+    {
+    id: 4,
+    name: "Priya Singh",
+    role: "Student",
+    photo: "https://randomuser.me/api/portraits/women/44.jpg",
+    review:
+      "The customer service is excellent, and the delivery is always on time. I'm a loyal customer!",
+  },
 ];
 
 export default function CustomerTestimonials() {
@@ -46,7 +48,7 @@ export default function CustomerTestimonials() {
     slidesToShow: 3,
     slidesToScroll: 1,
     autoplay: true,
-    autoplaySpeed: 4000,
+    autoplaySpeed: 5000,
     responsive: [
       {
         breakpoint: 1024,
@@ -60,42 +62,38 @@ export default function CustomerTestimonials() {
   };
 
   return (
-    <section className="max-w-7xl mx-auto px-6 py-16 bg-[var(--background-light)]">
-      <h2 className="text-3xl font-extrabold text-[var(--primary-brand)] mb-12 text-center tracking-wide">
-        What Our Customers Say
-      </h2>
-
-      <Slider {...settings} className="overflow-visible">
-        {testimonials.map(({ id, name, role, photo, review }) => (
-          <div
-            key={id}
-            className="bg-white rounded-xl p-4 shadow-md hover:shadow-lg transition-shadow duration-400 mx-2"
-          >
-            {/* Decorative Quote Symbol */}
-            <div className="text-[var(--buttons-highlight)] text-5xl select-none opacity-20 mb-3">
-              “
-            </div>
-
-            {/* Portrait with gradient ring */}
-            <div className="mb-3 p-1 rounded-full bg-gradient-to-tr from-[var(--buttons-highlight)] to-[var(--secondary-accent)] w-max mx-auto">
-              <img
-                src={photo}
-                alt={name}
-                className="w-14 h-14 rounded-full object-cover border-2 border-[var(--background-light)]"
-              />
-            </div>
-
-            <p className="text-[var(--text-primary)] italic mb-3 text-sm leading-snug">
-              {review}
-            </p>
-
-            <h3 className="text-md font-semibold text-[var(--primary-brand)]">
-              {name}
-            </h3>
-            <p className="text-[var(--text-secondary)] text-xs">{role}</p>
+    <section className="py-24 bg-[var(--contrast-light-2)]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="text-center mb-16">
+          <h2 className="text-4xl md:text-5xl font-extrabold text-[var(--primary-brand)] tracking-tight">
+            What Our Customers Say
+          </h2>
+          <p className="mt-4 text-lg text-[var(--text-secondary)] max-w-2xl mx-auto">
+            We are proud to have a community of happy customers.
+          </p>
           </div>
-        ))}
-      </Slider>
+        <Slider {...settings}>
+          {testimonials.map((testimonial) => (
+            <div key={testimonial.id} className="p-4">
+              <div className="bg-white rounded-lg shadow-lg p-8 h-full flex flex-col">
+                <FaQuoteLeft className="text-[var(--secondary-accent)] text-3xl mb-4" />
+                <p className="text-[var(--text-secondary)] italic mb-6 flex-grow">{testimonial.review}</p>
+                <div className="flex items-center">
+                  <img
+                    src={testimonial.photo}
+                    alt={testimonial.name}
+                    className="w-12 h-12 rounded-full object-cover mr-4"
+                  />
+                  <div>
+                    <h4 className="text-lg font-semibold text-[var(--primary-brand)]">{testimonial.name}</h4>
+                    <p className="text-[var(--text-secondary)]">{testimonial.role}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </Slider>
+      </div>
     </section>
   );
 }

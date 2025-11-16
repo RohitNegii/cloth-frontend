@@ -1,40 +1,119 @@
+
 "use client";
 import React, { useState } from "react";
-import { HiOutlineShoppingCart } from "react-icons/hi";
+import { HiOutlineShoppingCart, HiOutlineMenu, HiOutlineX, HiOutlineUserCircle } from "react-icons/hi";
 import SlidingCartModal from "./CartDropdown";
+import Link from "next/link";
+import { usePathname } from 'next/navigation';
+import AuthModal from "./AuthModal";
 
 const Header: React.FC = () => {
   const [cartOpen, setCartOpen] = useState(false);
-  const cartItemCount = 3;
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [isAuthModalOpen, setAuthModalOpen] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
+
+  // Dummy state for user login status
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const cartItemCount = 3; // TODO: Replace with dynamic data
+  const pathname = usePathname();
+
+  const navLinks = [
+    { href: "/", label: "Home" },
+    { href: "/about", label: "About" },
+    { href: "/contact", label: "Contact" },
+  ];
+
+  const openAuthModal = (login: boolean) => {
+    setIsLogin(login);
+    setAuthModalOpen(true);
+    setMenuOpen(false); // Close mobile menu when opening modal
+  };
 
   return (
     <>
-      <header className="sticky top-0 z-50 bg-[var(--primary-brand)] backdrop-blur-xl shadow-[0_3px_10px_rgb(0,0,0,0.15)]">
-        <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-          {/* Brand */}
-          <h1 className="text-[var(--secondary-accent)] text-2xl sm:text-3xl font-extrabold tracking-wider select-none transition hover:opacity-90">
-            UNCOMMON THREADS
-          </h1>
+      <header className="sticky top-0 z-40 bg-[var(--background-light)] shadow-md">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-24">
+            {/* Mobile Menu Button */}
+            <div className="md:hidden">
+              <button onClick={() => setMenuOpen(!menuOpen)} className="text-[var(--text-primary)] hover:text-[var(--primary-brand)] focus:outline-none">
+                {menuOpen ? <HiOutlineX size={28} /> : <HiOutlineMenu size={28} />}
+              </button>
+            </div>
 
-          {/* Cart */}
-          <div
-            className="relative cursor-pointer p-2 rounded-full hover:bg-white/10 transition"
-            onClick={() => setCartOpen(true)}
-            aria-label="Open cart"
-          >
-            <HiOutlineShoppingCart className="text-[var(--secondary-accent)] w-7 h-7" />
+            {/* Brand Logo */}
+            <div className="flex-shrink-0">
+              <Link href="/">
+                <img src="https://i.ibb.co/Vt0wS0v/logo-removebg-preview.png" alt="Uncommon Threads Logo" className="h-20 w-auto" />
+              </Link>
+            </div>
 
-            {cartItemCount > 0 && (
-              <span className="absolute -top-1.5 -right-1.5 bg-red-600 rounded-full w-5 h-5 flex items-center justify-center text-white text-xs font-semibold shadow-md animate-pulse">
-                {cartItemCount}
-              </span>
-            )}
+            {/* Desktop Navigation */}
+            <nav className="hidden md:flex items-center space-x-10">
+              {navLinks.map((link) => {
+                const isActive = pathname === link.href;
+                return (
+                  <Link key={link.href} href={link.href} className={`text-lg font-semibold transition-colors duration-300 ${isActive ? 'text-[var(--primary-brand)] border-b-2 border-[var(--primary-brand)]' : 'text-[var(--text-secondary)] hover:text-[var(--primary-brand)]'}`}>
+                    {link.label}
+                  </Link>
+                );
+              })}
+            </nav>
+
+            {/* Auth Buttons or Cart/Profile */}
+            <div className="flex items-center space-x-4">
+              {isLoggedIn ? (
+                <div className="relative cursor-pointer group" onClick={() => setCartOpen(true)} aria-label="Open cart">
+                  <HiOutlineShoppingCart className="text-[var(--text-primary)] group-hover:text-[var(--primary-brand)] w-8 h-8" />
+                  {cartItemCount > 0 && (
+                    <span className="absolute -top-2 -right-3 bg-[var(--buttons-highlight)] text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center border-2 border-[var(--background-light)]">
+                      {cartItemCount}
+                    </span>
+                  )}
+                </div>
+              ) : (
+                <div className="hidden md:flex items-center space-x-2">
+                  <button onClick={() => openAuthModal(true)} className="px-6 py-2 text-lg font-semibold text-[var(--text-secondary)] hover:text-[var(--primary-brand)] transition-colors duration-300">Login</button>
+                  <button onClick={() => openAuthModal(false)} className="px-6 py-2 text-lg font-semibold text-white bg-[var(--buttons-highlight)] rounded-lg hover:opacity-90 transition-opacity shadow-md">Sign Up</button>
+                </div>
+              )}
+              <div className="md:hidden flex items-center">
+                {isLoggedIn && <HiOutlineUserCircle className="text-[var(--text-primary)] w-8 h-8"/>}
+              </div>
+            </div>
           </div>
         </div>
+
+        {/* Mobile Navigation */}
+        {menuOpen && (
+          <div className="md:hidden bg-[var(--background-light)] border-t border-gray-200">
+            <nav className="px-4 pt-4 pb-6 space-y-2">
+              {navLinks.map((link) => {
+                 const isActive = pathname === link.href;
+                return(
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`block px-4 py-3 rounded-lg text-base font-semibold ${isActive ? 'text-[var(--primary-brand)] bg-gray-200' : 'text-[var(--text-secondary)] hover:text-[var(--primary-brand)] hover:bg-gray-100'}`}
+                  onClick={() => setMenuOpen(false)}
+                >
+                  {link.label}
+                </Link>
+              )})}
+               {!isLoggedIn && (
+                <div className="border-t border-gray-200 mt-4 pt-4 space-y-3">
+                    <button onClick={() => openAuthModal(true)} className="block w-full text-left px-4 py-3 rounded-lg text-base font-semibold text-[var(--text-secondary)] hover:bg-gray-100">Login</button>
+                    <button onClick={() => openAuthModal(false)} className="block w-full text-center px-4 py-3 rounded-lg text-base font-semibold text-white bg-[var(--buttons-highlight)] hover:opacity-90">Sign Up</button>
+                </div>
+                )}
+            </nav>
+          </div>
+        )}
       </header>
 
-      {/* Cart Sliding Drawer */}
       <SlidingCartModal isOpen={cartOpen} onClose={() => setCartOpen(false)} />
+      <AuthModal isOpen={isAuthModalOpen} onClose={() => setAuthModalOpen(false)} isLogin={isLogin} />
     </>
   );
 };
