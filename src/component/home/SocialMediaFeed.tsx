@@ -7,7 +7,7 @@ import { FaInstagram } from "react-icons/fa";
 const socialImages = [
   "https://images.unsplash.com/photo-1521334884684-d80222895322?auto=format&fit=crop&w=400&q=80",
   "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=400&q=80",
-  "https://images.unsplash.com/photo-1465101178521-c1a9136a3f86?auto=format&fit=crop&w=400&q=80",
+  "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=1200&q=80",
   "https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=400&q=80",
   "https://images.unsplash.com/photo-1542068829-1115f7259450?auto=format&fit=crop&w=400&q=80",
   "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=400&q=80",
@@ -15,7 +15,7 @@ const socialImages = [
 
 export default function SocialMediaFeed() {
   return (
-    <section className="py-24 bg-[var(--background-light)]">
+    <section className="py-14 bg-[var(--background-light)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-extrabold text-[var(--primary-brand)] tracking-tight">

@@ -9,28 +9,33 @@ const collectionsData = [
   {
     id: 1,
     name: "Winter '24 Collection",
-    description: "Embrace the cold with our latest collection of winter essentials. Featuring luxurious textures, warm fabrics, and contemporary silhouettes designed to keep you stylishly cozy.",
-    imageUrl: "https://images.unsplash.com/photo-1543163521-b3491374b998?auto=format&fit=crop&w=1200&q=80",
+    description:
+      "Embrace the cold with our latest collection of winter essentials. Featuring luxurious textures, warm fabrics, and contemporary silhouettes designed to keep you stylishly cozy.",
+    imageUrl:
+      "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=1200&q=80",
     ctaLink: "/collections/winter-24",
-    status: 'active'
+    status: "active",
   },
   {
     id: 2,
     name: "Urban Explorer",
-    imageUrl: "https://images.unsplash.com/photo-1552346154-21d32810aba3?auto=format&fit=crop&w=600&q=80",
-    status: 'soon'
+    imageUrl:
+      "https://images.unsplash.com/photo-1552346154-21d32810aba3?auto=format&fit=crop&w=600&q=80",
+    status: "soon",
   },
   {
     id: 3,
     name: "Summer Breeze",
-    imageUrl: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=600&q=80",
-    status: 'soon'
+    imageUrl:
+      "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=600&q=80",
+    status: "soon",
   },
   {
     id: 4,
     name: "Minimalist",
-    imageUrl: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=600&q=80",
-    status: 'soon'
+    imageUrl:
+      "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=600&q=80",
+    status: "soon",
   },
 ];
 
@@ -54,7 +59,7 @@ export default function FeaturedCollections() {
   if (!activeCollection) return null;
 
   return (
-    <section className="py-24 bg-[var(--background-light)]">
+    <section className="py-14 bg-[var(--background-light)]">
       <div className="w-full px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <motion.div
@@ -73,7 +78,7 @@ export default function FeaturedCollections() {
         </motion.div>
 
         {/* Active Collection Feature */}
-        <div className="relative w-full h-[60vh] rounded-2xl overflow-hidden shadow-2xl group mb-20">
+        <div className="relative w-full h-[60vh] rounded-2xl overflow-hidden shadow-2xl group mb-10">
             <img
                 src={activeCollection.imageUrl}
                 alt={activeCollection.name}

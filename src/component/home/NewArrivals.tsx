@@ -12,7 +12,8 @@ const newArrivals = [
     name: "Flowy Maxi Dress",
     category: "Dresses",
     price: "₹3,999",
-    imageUrl: "https://images.unsplash.com/photo-1594618765798-e7392a81e390?auto=format&fit=crop&w=600&q=80",
+    imageUrl:
+      "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=1200&q=80",
     ctaLink: "/product/1",
   },
   {
@@ -20,7 +21,8 @@ const newArrivals = [
     name: "Classic Denim Jacket",
     category: "Jackets",
     price: "₹4,499",
-    imageUrl: "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?auto=format&fit=crop&w=600&q=80",
+    imageUrl:
+      "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?auto=format&fit=crop&w=600&q=80",
     ctaLink: "/product/2",
   },
   {
@@ -28,7 +30,8 @@ const newArrivals = [
     name: "Linen Blend Shirt",
     category: "Shirts",
     price: "₹2,799",
-    imageUrl: "https://images.unsplash.com/photo-1621072156002-e2f31c197e41?auto=format&fit=crop&w=600&q=80",
+    imageUrl:
+      "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=1200&q=80",
     ctaLink: "/product/3",
   },
   {
@@ -36,7 +39,8 @@ const newArrivals = [
     name: "Tailored Chino Trousers",
     category: "Trousers",
     price: "₹3,299",
-    imageUrl: "https://images.unsplash.com/photo-1604176354204-9268737828e4?auto=format&fit=crop&w=600&q=80",
+    imageUrl:
+      "https://images.unsplash.com/photo-1604176354204-9268737828e4?auto=format&fit=crop&w=600&q=80",
     ctaLink: "/product/4",
   },
   {
@@ -44,15 +48,17 @@ const newArrivals = [
     name: "Minimalist Leather Sneakers",
     category: "Footwear",
     price: "₹5,999",
-    imageUrl: "https://images.unsplash.com/photo-1560769629-975ec94e6a86?auto=format&fit=crop&w=600&q=80",
+    imageUrl:
+      "https://images.unsplash.com/photo-1560769629-975ec94e6a86?auto=format&fit=crop&w=600&q=80",
     ctaLink: "/product/5",
   },
-   {
+  {
     id: 6,
     name: "Silk Blend Scarf",
     category: "Accessories",
     price: "₹1,999",
-    imageUrl: "https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?auto=format&fit=crop&w=600&q=80",
+    imageUrl:
+      "https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?auto=format&fit=crop&w=600&q=80",
     ctaLink: "/product/6",
   },
   {
@@ -60,7 +66,8 @@ const newArrivals = [
     name: "Wool-Cashmere Blend Sweater",
     category: "Knitwear",
     price: "₹7,999",
-    imageUrl: "https://images.unsplash.com/photo-1516762689617-e1cff243683d?auto=format&fit=crop&w=600&q=80",
+    imageUrl:
+      "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=1200&q=80",
     ctaLink: "/product/7",
   },
   {
@@ -68,7 +75,8 @@ const newArrivals = [
     name: "High-Waisted Skinny Jeans",
     category: "Denim",
     price: "₹4,999",
-    imageUrl: "https://images.unsplash.com/photo-1604176354204-9268737828e4?auto=format&fit=crop&w=600&q=80",
+    imageUrl:
+      "https://images.unsplash.com/photo-1604176354204-9268737828e4?auto=format&fit=crop&w=600&q=80",
     ctaLink: "/product/8",
   },
   {
@@ -76,7 +84,8 @@ const newArrivals = [
     name: "Leather Crossbody Bag",
     category: "Bags",
     price: "₹6,499",
-    imageUrl: "https://images.unsplash.com/photo-1594223274502-91a320983829?auto=format&fit=crop&w=600&q=80",
+    imageUrl:
+      "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=1200&q=80",
     ctaLink: "/product/9",
   },
   {
@@ -84,14 +93,15 @@ const newArrivals = [
     name: "Suede Ankle Boots",
     category: "Footwear",
     price: "₹8,999",
-    imageUrl: "https://images.unsplash.com/photo-1549481923-8c3d9735d130?auto=format&fit=crop&w=600&q=80",
+    imageUrl:
+      "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=1200&q=80",
     ctaLink: "/product/10",
   },
 ];
 
 export default function NewArrivals() {
   return (
-    <section className="w-full py-24 bg-[var(--contrast-light-2)]">
+    <section className="w-full py-14 bg-[var(--contrast-light-2)]">
       <div className="w-full px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-extrabold text-[var(--primary-brand)] tracking-tight">

@@ -14,10 +14,10 @@ const page = () => {
     <Layout>
       <main>
         <Hero />
-        <ShippingFeatures/>
         <FeaturedCollections/>
         <NewArrivals/>
         <CustomerTestimonials/>
+        <ShippingFeatures/>
         <NewsletterSignup/>
         <SocialMediaFeed/>
       </main>

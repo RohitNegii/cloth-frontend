@@ -62,7 +62,7 @@ export default function CustomerTestimonials() {
   };
 
   return (
-    <section className="py-24 bg-[var(--contrast-light-2)]">
+    <section className="py-14 bg-[var(--contrast-light-2)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-extrabold text-[var(--primary-brand)] tracking-tight">

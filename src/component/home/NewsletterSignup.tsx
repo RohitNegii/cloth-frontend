@@ -17,7 +17,7 @@ export default function NewsletterSignup() {
   };
 
   return (
-    <section className="relative py-24 bg-[var(--background-light)] overflow-hidden">
+    <section className="relative py-14 bg-[var(--background-light)] overflow-hidden">
         <div 
             className="absolute inset-0 bg-cover bg-center opacity-10"
             style={{backgroundImage: `url('https://images.unsplash.com/photo-1559523161-0d4d06921946?auto=format&fit=crop&w=1500&q=80')`}}
