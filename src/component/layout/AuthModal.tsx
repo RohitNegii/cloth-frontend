@@ -1,7 +1,9 @@
 
 "use client";
 import React, { useState } from 'react';
-import { FiX, FiMail, FiLock, FiUser, FiLogIn } from 'react-icons/fi';
+import { FiX, FiMail, FiLock, FiUser, FiLogIn, FiPhone } from 'react-icons/fi';
+import { userApi } from '@/lib/userApi';
+import toast from 'react-hot-toast';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -11,8 +13,126 @@ interface AuthModalProps {
 
 const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, isLogin: initialLoginState }) => {
   const [isLogin, setIsLogin] = useState(initialLoginState);
+  const [otpSent, setOtpSent] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    phone: '',
+    otp: '',
+    name: '',
+    email: '',
+  });
 
   if (!isOpen) return null;
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSendOtp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!/^\d{10}$/.test(formData.phone)) {
+      return toast.error('Please enter a valid 10-digit phone number.');
+    }
+    setLoading(true);
+    try {
+      await userApi.sendOtp(formData.phone);
+      setOtpSent(true);
+      toast.success('OTP sent successfully!');
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Failed to send OTP. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleVerifyOtp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (formData.otp.length !== 6) {
+      return toast.error('Please enter a valid 6-digit OTP.');
+    }
+    setLoading(true);
+    try {
+      const { phone, otp, name, email } = formData;
+      const response = await userApi.verifyOtp(phone, otp, name, email);
+      // NOTE: In a real app, you would store the token and user data in a global state/context.
+      console.log('Login successful:', response);
+      toast.success('Logged in successfully!');
+      onClose();
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Invalid OTP. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const renderOtpForm = () => (
+    <form onSubmit={handleVerifyOtp} className="space-y-6">
+      <div className="relative">
+        <FiLock className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-secondary)]" />
+        <input 
+            type="text" 
+            name="otp"
+            placeholder="Enter 6-digit OTP" 
+            className="w-full pl-12 pr-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--buttons-highlight)]"
+            value={formData.otp}
+            onChange={handleChange}
+            maxLength={6}
+        />
+      </div>
+      <button type="submit" disabled={loading} className="w-full flex items-center justify-center py-3 px-4 border border-transparent rounded-lg shadow-lg text-lg font-bold text-white bg-[var(--buttons-highlight)] hover:opacity-90 transition-opacity disabled:opacity-50">
+        <FiLogIn className="w-6 h-6 mr-2" />
+        {loading ? 'Verifying...' : 'Verify & Login'}
+      </button>
+    </form>
+  );
+
+  const renderPhoneForm = () => (
+    <form onSubmit={handleSendOtp} className="space-y-6">
+    {!isLogin && (
+      <>
+        <div className="relative">
+          <FiUser className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-secondary)]" />
+          <input 
+            type="text" 
+            name="name"
+            placeholder="Username" 
+            className="w-full pl-12 pr-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--buttons-highlight)]"
+            value={formData.name}
+            onChange={handleChange} 
+          />
+        </div>
+        <div className="relative">
+          <FiMail className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-secondary)]" />
+          <input 
+            type="email" 
+            name="email"
+            placeholder="Email Address" 
+            className="w-full pl-12 pr-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--buttons-highlight)]"
+            value={formData.email}
+            onChange={handleChange}
+            />
+        </div>
+      </>
+    )}
+    <div className="relative">
+      <FiPhone className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-secondary)]" />
+      <input 
+        type="tel" 
+        name="phone"
+        placeholder="10-digit phone number" 
+        className="w-full pl-12 pr-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--buttons-highlight)]"
+        value={formData.phone}
+        onChange={handleChange}
+        maxLength={10}
+        />
+    </div>
+
+    <button type="submit" disabled={loading} className="w-full flex items-center justify-center py-3 px-4 border border-transparent rounded-lg shadow-lg text-lg font-bold text-white bg-[var(--buttons-highlight)] hover:opacity-90 transition-opacity disabled:opacity-50">
+      <FiLogIn className="w-6 h-6 mr-2" />
+      {loading ? 'Sending OTP...' : 'Send OTP'}
+    </button>
+  </form>
+  )
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 bg-opacity-60 backdrop-blur-sm">
@@ -28,47 +148,16 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, isLogin: initial
           </button>
 
           <div className="text-center mb-8">
-            <h2 className="text-4xl font-bold text-[var(--primary-brand)]">{isLogin ? 'Welcome Back' : 'Create Account'}</h2>
-            <p className="mt-3 text-[var(--text-secondary)]">{isLogin ? 'Sign in to access your account' : 'Join the Uncommon Threads family'}</p>
+            <h2 className="text-4xl font-bold text-[var(--primary-brand)]">{otpSent ? 'Enter OTP' : isLogin ? 'Welcome Back' : 'Create Account'}</h2>
+            <p className="mt-3 text-[var(--text-secondary)]">{otpSent ? `We've sent an OTP to ${formData.phone}` : isLogin ? 'Sign in to access your account' : 'Join the Uncommon Threads family'}</p>
           </div>
 
-          {/* Form */}
-          <form className="space-y-6">
-            {!isLogin && (
-              <div className="relative">
-                <FiUser className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-secondary)]" />
-                <input type="text" placeholder="Username" className="w-full pl-12 pr-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--buttons-highlight)]" />
-              </div>
-            )}
-            <div className="relative">
-              <FiMail className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-secondary)]" />
-              <input type="email" placeholder="Email Address" className="w-full pl-12 pr-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--buttons-highlight)]" />
-            </div>
-            <div className="relative">
-              <FiLock className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-secondary)]" />
-              <input type="password" placeholder="Password" className="w-full pl-12 pr-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--buttons-highlight)]" />
-            </div>
-
-            {isLogin && (
-                <div className="flex items-center justify-between text-sm">
-                    <div className="flex items-center gap-2">
-                    <input id="remember" type="checkbox" className="h-4 w-4 rounded border-gray-300 text-[var(--buttons-highlight)] focus:ring-[var(--buttons-highlight)]" />
-                    <label htmlFor="remember" className="text-[var(--text-secondary)]">Remember me</label>
-                    </div>
-                    <a href="#" className="font-medium text-[var(--buttons-highlight)] hover:underline">Forgot password?</a>
-              </div>
-            )}
-
-            <button type="submit" className="w-full flex items-center justify-center py-3 px-4 border border-transparent rounded-lg shadow-lg text-lg font-bold text-white bg-[var(--buttons-highlight)] hover:opacity-90 transition-opacity">
-              <FiLogIn className="w-6 h-6 mr-2" />
-              {isLogin ? 'Sign In' : 'Sign Up'}
-            </button>
-          </form>
+          {otpSent ? renderOtpForm() : renderPhoneForm()}
 
           <div className="mt-8 text-center">
             <p className="text-[var(--text-secondary)]">
               {isLogin ? "Don't have an account?" : "Already have an account?"}
-              <button onClick={() => setIsLogin(!isLogin)} className="font-semibold text-[var(--buttons-highlight)] hover:underline ml-2">
+              <button onClick={() => { setIsLogin(!isLogin); setOtpSent(false); }} className="font-semibold text-[var(--buttons-highlight)] hover:underline ml-2">
                 {isLogin ? 'Sign Up' : 'Sign In'}
               </button>
             </p>
