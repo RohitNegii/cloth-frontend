@@ -1,4 +1,6 @@
-import React from "react";
+'''import React, { useEffect, useState } from "react";
+import { getCart, removeFromCart, updateCartItem } from "@/lib/cartApi";
+import useUserStore from "@/store/userStore";
 
 interface CartItem {
   id: number;
@@ -7,25 +9,6 @@ interface CartItem {
   quantity: number;
   image: string;
 }
-
-const dummyCartItems: CartItem[] = [
-  {
-    id: 1,
-    name: "NanoTech Winter Jacket",
-    price: "₹8,999",
-    quantity: 1,
-    image:
-      "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=80&q=80",
-  },
-  {
-    id: 2,
-    name: "Thermal Gloves",
-    price: "₹999",
-    quantity: 2,
-    image:
-      "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=80&q=80",
-  },
-];
 
 interface SlidingCartModalProps {
   isOpen: boolean;
@@ -36,14 +19,58 @@ const SlidingCartModal: React.FC<SlidingCartModalProps> = ({
   isOpen,
   onClose,
 }) => {
-  const subtotal = dummyCartItems.reduce(
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const { token } = useUserStore();
+
+  useEffect(() => {
+    if (isOpen && token) {
+      const fetchCart = async () => {
+        try {
+          setLoading(true);
+          const response = await getCart();
+          setCartItems(response.data);
+        } catch (error) {
+          console.error("Error fetching cart:", error);
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchCart();
+    }
+  }, [isOpen, token]);
+
+  const handleRemoveFromCart = async (itemId: number) => {
+    try {
+      await removeFromCart(String(itemId));
+      setCartItems(cartItems.filter((item) => item.id !== itemId));
+    } catch (error) {
+      console.error("Error removing from cart:", error);
+    }
+  };
+
+  const handleUpdateQuantity = async (itemId: number, quantity: number) => {
+    if (quantity <= 0) {
+      handleRemoveFromCart(itemId);
+      return;
+    }
+    try {
+      await updateCartItem(String(itemId), quantity);
+      setCartItems(
+        cartItems.map((item) =>
+          item.id === itemId ? { ...item, quantity } : item
+        )
+      );
+    } catch (error) {
+      console.error("Error updating cart item:", error);
+    }
+  };
+
+  const subtotal = cartItems.reduce(
     (sum, item) =>
       sum + parseInt(item.price.replace(/[^\d]/g, "")) * item.quantity,
     0
   );
-  const freeShippingThreshold = 499;
-  const saved = 349;
-  const hasFreeShipping = subtotal >= freeShippingThreshold;
 
   return (
     <div>
@@ -88,67 +115,20 @@ const SlidingCartModal: React.FC<SlidingCartModalProps> = ({
           </button>
         </header>
 
-        {/* Savings bar */}
-        <div
-          className="px-4 py-2 text-center font-medium"
-          style={{ background: "var(--buttons-highlight)", color: "#fff" }}
-        >
-          You saved ₹{saved} on this order
-        </div>
-
-        {/* Free shipping status */}
-        <div
-          className="text-center py-2 text-sm"
-          style={{ color: "var(--text-secondary)" }}
-        >
-          <span style={{ color: "var(--secondary-accent)", fontWeight: 600 }}>
-            🎉 Congratulations!
-          </span>{" "}
-          You&apos;ve availed{" "}
-          <span style={{ color: "var(--buttons-highlight)", fontWeight: 600 }}>
-            Free shipping
-          </span>{" "}
-          🎉
-        </div>
-
-        {/* Progress bar */}
-        <div className="px-6 py-2 flex items-center">
-          <span className="text-xs" style={{ color: "var(--text-secondary)" }}>
-            Shipping ₹50
-          </span>
-          <div
-            className="flex-grow mx-2 h-2 rounded-lg bg-gray-200 relative"
-            style={{ background: "var(--secondary-accent)" }}
-          >
-            <div
-              className={`absolute top-0 left-0 h-2 rounded-lg`}
-              style={{
-                background: "var(--buttons-highlight)",
-                width: hasFreeShipping ? "100%" : "50%",
-                transition: "width 0.4s",
-              }}
-            />
-          </div>
-          <span
-            className="text-xs font-bold"
-            style={{ color: "var(--buttons-highlight)" }}
-          >
-            Free Shipping
-          </span>
-        </div>
-
         {/* Cart items */}
         <div className="flex-grow overflow-y-auto p-5 space-y-4">
-          {dummyCartItems.length === 0 ? (
+          {loading ? (
+            <p>Loading...</p>
+          ) : cartItems.length === 0 ? (
             <p
               className="text-center mt-12"
               style={{ color: "var(--text-secondary)" }}
             >
-              Your cart is empty.
+              No item in cart
             </p>
           ) : (
             <ul className="space-y-4">
-              {dummyCartItems.map(({ id, name, price, quantity, image }) => (
+              {cartItems.map(({ id, name, price, quantity, image }) => (
                 <li
                   key={id}
                   className="flex gap-4 p-4 rounded-xl border shadow hover:shadow-md transition"
@@ -178,6 +158,7 @@ const SlidingCartModal: React.FC<SlidingCartModalProps> = ({
                     {/* Quantity controls */}
                     <div className="flex items-center gap-2 mt-2">
                       <button
+                        onClick={() => handleUpdateQuantity(id, quantity - 1)}
                         className="w-7 h-7 border rounded-md flex items-center justify-center transition"
                         style={{
                           borderColor: "var(--secondary-accent)",
@@ -188,6 +169,7 @@ const SlidingCartModal: React.FC<SlidingCartModalProps> = ({
                       </button>
                       <span className="font-medium">{quantity}</span>
                       <button
+                        onClick={() => handleUpdateQuantity(id, quantity + 1)}
                         className="w-7 h-7 border rounded-md flex items-center justify-center transition"
                         style={{
                           borderColor: "var(--secondary-accent)",
@@ -211,85 +193,30 @@ const SlidingCartModal: React.FC<SlidingCartModalProps> = ({
               ))}
             </ul>
           )}
-          {/* Last Minute Deals */}
-          <div
-            className="mt-4 rounded-xl border px-4 py-3"
-            style={{
-              background: "var(--background-light)",
-              borderColor: "var(--secondary-accent)",
-            }}
-          >
-            <div
-              className="font-semibold mb-2"
-              style={{ color: "var(--text-primary)" }}
-            >
-              Last Minute Deals
-            </div>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <img
-                  src="https://cdn.pixabay.com/photo/2017/01/06/19/15/spray-1959334_1280.png"
-                  alt="Body Spray"
-                  className="w-12 h-12 object-cover rounded"
-                />
-                <div>
-                  <div
-                    className="font-bold text-sm"
-                    style={{ color: "var(--text-primary)" }}
-                  >
-                    Body Spray 150ml
-                  </div>
-                  <div
-                    className="text-xs line-through"
-                    style={{ color: "var(--text-secondary)" }}
-                  >
-                    ₹299
-                  </div>
-                  <div
-                    className="text-xs font-bold"
-                    style={{ color: "var(--buttons-highlight)" }}
-                  >
-                    ₹99{" "}
-                    <span style={{ color: "var(--text-secondary)" }}>
-                      66% OFF
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <button
-                className="px-3 py-1 rounded font-medium text-sm"
-                style={{
-                  background: "var(--buttons-highlight)",
-                  color: "#fff",
-                }}
-              >
-                + ADD
-              </button>
-            </div>
-          </div>
-
-        
         </div>
 
         {/* Checkout button */}
-        <div
-          className="sticky bottom-0 left-0 right-0 px-5 py-4 border-t"
-          style={{ background: "#fff", borderColor: "var(--secondary-accent)" }}
-        >
-          <button
-            className="w-full rounded-full py-3 px-3 font-semibold text-sm transition-all duration-300 shadow-lg"
-            style={{
-              background: "var(--primary-brand)",
-              color: "#fff",
-            }}
-            onClick={() => alert("Proceeding to checkout")}
+        {cartItems.length > 0 && (
+          <div
+            className="sticky bottom-0 left-0 right-0 px-5 py-4 border-t"
+            style={{ background: "#fff", borderColor: "var(--secondary-accent)" }}
           >
-            Proceed to Checkout for Final Price →
-          </button>
-        </div>
+            <button
+              className="w-full rounded-full py-3 px-3 font-semibold text-sm transition-all duration-300 shadow-lg"
+              style={{
+                background: "var(--primary-brand)",
+                color: "#fff",
+              }}
+              onClick={() => alert("Proceeding to checkout")}
+            >
+              Proceed to Checkout for Final Price →
+            </button>
+          </div>
+        )}
       </aside>
     </div>
   );
 };
 
 export default SlidingCartModal;
+'''

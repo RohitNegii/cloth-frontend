@@ -1,4 +1,4 @@
-// ProductDetailPage.js (Modified to use local mock API for testing)
+'''// ProductDetailPage.js (Modified to use local mock API for testing)
 
 "use client";
 
@@ -10,6 +10,10 @@ import Link from "next/link";
 // 💡 IMPORTANT: Temporarily importing the mock function here for demonstration
 import { getProductById } from "@/lib/productApi";
 import { useParams } from "next/navigation";
+import useUserStore from "@/store/userStore";
+import useAuthModalStore from "@/store/authModalStore";
+import { addToCart } from "@/lib/cartApi";
+import useCartStore from "@/store/cartStore";
 
 // ⚠️ KEEPING THE RELATED PRODUCTS DATA AS REQUESTED ⚠️
 const relatedProducts = [
@@ -53,6 +57,9 @@ const relatedProducts = [
 
 export default function ProductDetailPage() {
   const params = useParams() || { id: "test-product-id" };
+  const { isLoggedIn } = useUserStore();
+  const { openAuthModal } = useAuthModalStore();
+  const { openCart } = useCartStore();
 
   const [product, setProduct] = useState<any>(null);
   const [selectedSize, setSelectedSize] = useState("");
@@ -79,6 +86,19 @@ export default function ProductDetailPage() {
       fetchProduct();
     }
   }, [params.id]);
+
+  const handleAddToCart = async () => {
+    if (!isLoggedIn) {
+      openAuthModal();
+    } else {
+      try {
+        await addToCart(product.id, 1, selectedSize, selectedColor);
+        openCart();
+      } catch (error) {
+        console.error("Error adding to cart:", error);
+      }
+    }
+  };
 
   if (!product) {
     return (
@@ -193,7 +213,10 @@ export default function ProductDetailPage() {
 
               {/* Action Buttons */}
               <div className="flex flex-col sm:flex-row gap-4">
-                <button className="flex-1 bg-[var(--buttons-highlight)] text-white px-8 py-4 rounded-lg font-bold text-lg hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
+                <button
+                  onClick={handleAddToCart}
+                  className="flex-1 bg-[var(--buttons-highlight)] text-white px-8 py-4 rounded-lg font-bold text-lg hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
+                >
                   <FiShoppingCart /> Add to Cart
                 </button>
                 <button className="p-4 rounded-lg bg-[var(--contrast-light-2)] text-[var(--text-primary)] hover:bg-gray-300 transition-colors">
@@ -248,3 +271,4 @@ export default function ProductDetailPage() {
     </Layout>
   );
 }
+'''

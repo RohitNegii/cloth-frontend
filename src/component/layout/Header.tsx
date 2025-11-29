@@ -1,22 +1,26 @@
-
-"use client";
-import React, { useState } from "react";
+'''"use client";
+import React, { useState, useEffect } from "react";
 import { HiOutlineShoppingCart, HiOutlineMenu, HiOutlineX, HiOutlineUserCircle } from "react-icons/hi";
 import SlidingCartModal from "./CartDropdown";
 import Link from "next/link";
 import { usePathname } from 'next/navigation';
 import AuthModal from "./AuthModal";
+import useUserStore from "@/store/userStore";
+import useCartStore from "@/store/cartStore";
+import useAuthModalStore from "@/store/authModalStore";
 
 const Header: React.FC = () => {
-  const [cartOpen, setCartOpen] = useState(false);
+  const { isCartOpen, openCart, closeCart } = useCartStore();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [isAuthModalOpen, setAuthModalOpen] = useState(false);
+  const { isAuthModalOpen, openAuthModal, closeAuthModal } = useAuthModalStore();
   const [isLogin, setIsLogin] = useState(true);
-
-  // Dummy state for user login status
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { isLoggedIn, initialize } = useUserStore();
   const cartItemCount = 3; // TODO: Replace with dynamic data
   const pathname = usePathname();
+
+  useEffect(() => {
+    initialize();
+  }, [initialize]);
 
   const navLinks = [
     { href: "/", label: "Home" },
@@ -24,10 +28,10 @@ const Header: React.FC = () => {
     { href: "/contact", label: "Contact" },
   ];
 
-  const openAuthModal = (login: boolean) => {
+  const openAuthModalAsLogin = (login: boolean) => {
     setIsLogin(login);
-    setAuthModalOpen(true);
-    setMenuOpen(false); // Close mobile menu when opening modal
+    openAuthModal();
+    setMenuOpen(false);
   };
 
   return (
@@ -64,7 +68,7 @@ const Header: React.FC = () => {
             {/* Auth Buttons or Cart/Profile */}
             <div className="flex items-center space-x-4">
               {isLoggedIn ? (
-                <div className="relative cursor-pointer group" onClick={() => setCartOpen(true)} aria-label="Open cart">
+                <div className="relative cursor-pointer group" onClick={openCart} aria-label="Open cart">
                   <HiOutlineShoppingCart className="text-[var(--text-primary)] group-hover:text-[var(--primary-brand)] w-8 h-8" />
                   {cartItemCount > 0 && (
                     <span className="absolute -top-2 -right-3 bg-[var(--buttons-highlight)] text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center border-2 border-[var(--background-light)]">
@@ -74,8 +78,8 @@ const Header: React.FC = () => {
                 </div>
               ) : (
                 <div className="hidden md:flex items-center space-x-2">
-                  <button onClick={() => openAuthModal(true)} className="px-6 py-2 text-lg font-semibold text-[var(--text-secondary)] hover:text-[var(--primary-brand)] transition-colors duration-300">Login</button>
-                  <button onClick={() => openAuthModal(false)} className="px-6 py-2 text-lg font-semibold text-white bg-[var(--buttons-highlight)] rounded-lg hover:opacity-90 transition-opacity shadow-md">Sign Up</button>
+                  <button onClick={() => openAuthModalAsLogin(true)} className="px-6 py-2 text-lg font-semibold text-[var(--text-secondary)] hover:text-[var(--primary-brand)] transition-colors duration-300">Login</button>
+                  <button onClick={() => openAuthModalAsLogin(false)} className="px-6 py-2 text-lg font-semibold text-white bg-[var(--buttons-highlight)] rounded-lg hover:opacity-90 transition-opacity shadow-md">Sign Up</button>
                 </div>
               )}
               <div className="md:hidden flex items-center">
@@ -103,8 +107,8 @@ const Header: React.FC = () => {
               )})}
                {!isLoggedIn && (
                 <div className="border-t border-gray-200 mt-4 pt-4 space-y-3">
-                    <button onClick={() => openAuthModal(true)} className="block w-full text-left px-4 py-3 rounded-lg text-base font-semibold text-[var(--text-secondary)] hover:bg-gray-100">Login</button>
-                    <button onClick={() => openAuthModal(false)} className="block w-full text-center px-4 py-3 rounded-lg text-base font-semibold text-white bg-[var(--buttons-highlight)] hover:opacity-90">Sign Up</button>
+                    <button onClick={() => openAuthModalAsLogin(true)} className="block w-full text-left px-4 py-3 rounded-lg text-base font-semibold text-[var(--text-secondary)] hover:bg-gray-100">Login</button>
+                    <button onClick={() => openAuthModalAsLogin(false)} className="block w-full text-center px-4 py-3 rounded-lg text-base font-semibold text-white bg-[var(--buttons-highlight)] hover:opacity-90">Sign Up</button>
                 </div>
                 )}
             </nav>
@@ -112,10 +116,11 @@ const Header: React.FC = () => {
         )}
       </header>
 
-      <SlidingCartModal isOpen={cartOpen} onClose={() => setCartOpen(false)} />
-      <AuthModal isOpen={isAuthModalOpen} onClose={() => setAuthModalOpen(false)} isLogin={isLogin} />
+      <SlidingCartModal isOpen={isCartOpen} onClose={closeCart} />
+      <AuthModal isOpen={isAuthModalOpen} onClose={closeAuthModal} isLogin={isLogin} />
     </>
   );
 };
 
 export default Header;
+'''
