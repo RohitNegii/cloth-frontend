@@ -1,29 +1,12 @@
 
 "use client";
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { FiShoppingCart, FiHeart, FiShare2 } from 'react-icons/fi';
 import { FaStar } from 'react-icons/fa';
 import Layout from '@/component/layout/Layout';
 import Link from 'next/link';
-
-
-
-const product = {
-  id: '1',
-  name: 'Urban Explorer Jacket',
-  price: 149.99,
-  rating: 4.5,
-  reviews: 128,
-  description: 'The Urban Explorer Jacket is your perfect companion for city adventures. Made with a water-resistant outer shell and a comfortable fleece lining, it provides both style and protection. Features multiple pockets for all your essentials.',
-  sizes: ['XS', 'S', 'M', 'L', 'XL'],
-  colors: ['Black', 'Navy', 'Olive'],
-  images: [
-    'https://images.unsplash.com/photo-1542068829-1115f7259450?auto=format&fit=crop&w=800&q=80',
-    'https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=800&q=80',
-    'https://images.unsplash.com/photo-1593032583944-18a0346351a8?auto=format&fit=crop&w=800&q=80',
-  ],
-};
+import { getProductById } from '@/lib/productApi'; // Assuming you have this API function
 
 const relatedProducts = [
     {
@@ -60,10 +43,33 @@ const relatedProducts = [
     },
 ];
 
-export default function ProductDetailPage({ params }: { params: { productId: string } }) {
-  const [selectedSize, setSelectedSize] = React.useState(product.sizes[2]);
-  const [selectedColor, setSelectedColor] = React.useState(product.colors[0]);
-  const [mainImage, setMainImage] = React.useState(product.images[0]);
+export default function ProductDetailPage({ params }: { params: { id: string } }) {
+  const [product, setProduct] = useState<any>(null);
+  const [selectedSize, setSelectedSize] = useState('');
+  const [selectedColor, setSelectedColor] = useState('');
+  const [mainImage, setMainImage] = useState('');
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const productData = await getProductById(params.id);
+        setProduct(productData.product);
+        setMainImage(productData.product.images[0]);
+        setSelectedSize(productData.product.sizes[0]);
+        setSelectedColor(productData.product.colors[0]);
+      } catch (error) {
+        console.error("Error fetching product:", error);
+      }
+    };
+
+    if (params.id) {
+      fetchProduct();
+    }
+  }, [params.id]);
+
+  if (!product) {
+    return <Layout><div>Loading...</div></Layout>;
+  }
 
   return (
     <Layout>
@@ -73,7 +79,7 @@ export default function ProductDetailPage({ params }: { params: { productId: str
             {/* Image Gallery */}
             <div className="flex flex-col-reverse md:flex-row gap-4">
               <div className="flex md:flex-col gap-4 overflow-x-auto md:overflow-y-auto">
-                {product.images.map((img, idx) => (
+                {product.images.map((img: string, idx: number) => (
                   <img
                     key={idx}
                     src={img}
@@ -107,7 +113,7 @@ export default function ProductDetailPage({ params }: { params: { productId: str
               <div className="mb-6">
                 <h3 className="text-lg font-semibold mb-3">Size:</h3>
                 <div className="flex gap-3">
-                  {product.sizes.map(size => (
+                  {product.sizes.map((size: string) => (
                     <button
                       key={size}
                       onClick={() => setSelectedSize(size)}
@@ -122,7 +128,7 @@ export default function ProductDetailPage({ params }: { params: { productId: str
               <div className="mb-8">
                 <h3 className="text-lg font-semibold mb-3">Color:</h3>
                 <div className="flex gap-3">
-                  {product.colors.map(color => (
+                  {product.colors.map((color: string) => (
                     <button
                       key={color}
                       onClick={() => setSelectedColor(color)}
