@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { HiOutlineShoppingCart, HiOutlineMenu, HiOutlineX, HiOutlineUserCircle } from "react-icons/hi";
 import SlidingCartModal from "./CartDropdown";
 import Link from "next/link";
@@ -10,17 +10,14 @@ import useCartStore from "@/store/cartStore";
 import useAuthModalStore from "@/store/authModalStore";
 
 const Header: React.FC = () => {
-  const { isCartOpen, openCart, closeCart } = useCartStore();
+  const { isCartOpen, openCart, closeCart, items: cartItems } = useCartStore();
   const [menuOpen, setMenuOpen] = useState(false);
   const { isAuthModalOpen, openAuthModal, closeAuthModal } = useAuthModalStore();
   const [isLogin, setIsLogin] = useState(true);
-  const { isLoggedIn, initialize } = useUserStore();
-  const cartItemCount = 3; // TODO: Replace with dynamic data
+  const { user } = useUserStore();
+  const isLoggedIn = !!user;
+  const cartItemCount = cartItems.length;
   const pathname = usePathname();
-
-  useEffect(() => {
-    initialize();
-  }, [initialize]);
 
   const navLinks = [
     { href: "/", label: "Home" },
