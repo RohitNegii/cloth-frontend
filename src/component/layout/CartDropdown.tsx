@@ -2,23 +2,20 @@
 import React, { useEffect, useState } from "react";
 import { getCart, removeFromCart, updateCartItem } from "@/lib/cartApi";
 import useUserStore from "@/store/userStore";
+import useCartStore from "@/store/cartStore"; // Import useCartStore
 import { useRouter } from 'next/navigation';
 
-// 1. UPDATED INTERFACE
 interface CartItem {
   id: number;
   quantity: number;
   color: string;
   size: string;
   product: {
-    // Correctly reflect the nested structure
     name: string;
-    price: number; // Price is a number
+    price: number;
     images: string[];
-    // Include other product fields as needed, e.g., _id
     _id: string;
   };
-  // The API response also has _id, which you can use as the item's key
   _id: string;
 }
 
@@ -27,27 +24,27 @@ interface SlidingCartModalProps {
   onClose: () => void;
 }
 
-const SlidingCartModal: React.FC<SlidingCartModalProps> = ({
-  isOpen,
-  onClose,
-}) => {
+const SlidingCartModal: React.FC<SlidingCartModalProps> = ({ isOpen, onClose }) => {
   const router = useRouter();
-  // Using 'any' type temporarily if the full CartItem structure is complex,
-  // but using the updated interface is better.
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
-  const [loading, setLoading] = useState(true);
   const { token } = useUserStore();
+  const { items: cartItems, setCart, getCartTotal } = useCartStore(); // Use cart store
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // ... (fetchCart logic remains the same)
     if (isOpen && token) {
       const fetchCart = async () => {
         try {
           setLoading(true);
           const response = await getCart();
-          // Assuming your API returns an array of CartItem objects in response?.data?.items
-          // We cast the response data to the new structure
-          setCartItems((response?.data?.items as CartItem[]) || []);
+          const items = response?.data?.items.map((item: any) => ({
+            product: item.product._id,
+            name: item.product.name,
+            quantity: item.quantity,
+            price: item.product.price,
+            size: item.size,
+            color: item.color,
+          })) || [];
+          setCart(items);
         } catch (error) {
           console.error("Error fetching cart:", error);
         } finally {
@@ -56,44 +53,49 @@ const SlidingCartModal: React.FC<SlidingCartModalProps> = ({
       };
       fetchCart();
     }
-  }, [isOpen, token]);
+  }, [isOpen, token, setCart]);
 
   const handleRemoveFromCart = async (itemId: string) => {
-    // ID should probably be string (_id)
     try {
-      // You should use the MongoDB item ID string for removal
       await removeFromCart(itemId);
-      setCartItems(cartItems.filter((item) => item._id !== itemId));
+      const response = await getCart();
+      const items = response?.data?.items.map((item: any) => ({
+        product: item.product._id,
+        name: item.product.name,
+        quantity: item.quantity,
+        price: item.product.price,
+        size: item.size,
+        color: item.color,
+      })) || [];
+      setCart(items);
     } catch (error) {
       console.error("Error removing from cart:", error);
     }
   };
 
   const handleUpdateQuantity = async (itemId: string, quantity: number) => {
-    // ID should probably be string (_id)
     if (quantity <= 0) {
       handleRemoveFromCart(itemId);
       return;
     }
     try {
-      // You should use the MongoDB item ID string for update
       await updateCartItem(itemId, quantity);
-      setCartItems(
-        cartItems.map((item) =>
-          item._id === itemId ? { ...item, quantity } : item
-        )
-      );
+      const response = await getCart();
+      const items = response?.data?.items.map((item: any) => ({
+        product: item.product._id,
+        name: item.product.name,
+        quantity: item.quantity,
+        price: item.product.price,
+        size: item.size,
+        color: item.color,
+      })) || [];
+      setCart(items);
     } catch (error) {
       console.error("Error updating cart item:", error);
     }
   };
 
-  // 2. UPDATED SUBTOTAL CALCULATION
-  const subtotal = cartItems.reduce((sum, item) => {
-    // Access price from the nested product object. Use 0 as a fallback.
-    const priceValue = item.product?.price || 0;
-    return sum + priceValue * item.quantity;
-  }, 0);
+  const subtotal = getCartTotal();
 
   return (
     <div>
@@ -101,9 +103,7 @@ const SlidingCartModal: React.FC<SlidingCartModalProps> = ({
       <div
         onClick={onClose}
         className={`fixed inset-0 z-30 transition-opacity duration-300 ${
-          isOpen
-            ? "opacity-100 pointer-events-auto"
-            : "opacity-0 pointer-events-none"
+          isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         }`}
         style={{ background: "rgba(0,0,0,0.5)", backdropFilter: "blur(4px)" }}
       />
@@ -148,47 +148,38 @@ const SlidingCartModal: React.FC<SlidingCartModalProps> = ({
             </p>
           ) : (
             <ul className="space-y-4">
-              {cartItems.map((item) => {
-                // Destructure directly from 'item' and 'item.product'
-                const { _id, quantity, color, size } = item;
-                const { name, price, images } = item.product;
-                const image = images?.[0] || ""; // Use the first image
-
-                // Calculate the final price for this item
-                const itemFinalPrice = (price || 0) * quantity;
-
-                return (
+              {cartItems.map((item) => (
                   <li
-                    key={_id} // Use the item's _id as the key
+                    key={item.product}
                     className="flex gap-4 p-4 rounded-xl border shadow hover:shadow-md transition"
                     style={{
                       background: "#fff",
                       borderColor: "var(--secondary-accent)",
                     }}
                   >
-                    <img
+                    {/* <img
                       src={image}
                       alt={name}
                       className="w-16 h-16 object-cover rounded-lg"
-                    />
+                    /> */}
                     <div className="flex flex-col flex-grow justify-center">
                       <span
                         className="font-semibold"
                         style={{ color: "var(--text-primary)" }}
                       >
-                        {name} ({color}, {size})
+                        {item.name} ({item.color}, {item.size})
                       </span>
                       <span
                         className="text-sm"
                         style={{ color: "var(--text-secondary)" }}
                       >
-                        ₹{price.toLocaleString()} × {quantity}
+                        ₹{item.price.toLocaleString()} × {item.quantity}
                       </span>
                       {/* Quantity controls */}
                       <div className="flex items-center gap-2 mt-2">
                         <button
                           onClick={() =>
-                            handleUpdateQuantity(_id, quantity - 1)
+                            handleUpdateQuantity(item.product, item.quantity - 1)
                           }
                           className="w-7 h-7 border rounded-md flex items-center justify-center transition"
                           style={{
@@ -198,10 +189,10 @@ const SlidingCartModal: React.FC<SlidingCartModalProps> = ({
                         >
                           -
                         </button>
-                        <span className="font-medium">{quantity}</span>
+                        <span className="font-medium">{item.quantity}</span>
                         <button
                           onClick={() =>
-                            handleUpdateQuantity(_id, quantity + 1)
+                            handleUpdateQuantity(item.product, item.quantity + 1)
                           }
                           className="w-7 h-7 border rounded-md flex items-center justify-center transition"
                           style={{
@@ -213,16 +204,14 @@ const SlidingCartModal: React.FC<SlidingCartModalProps> = ({
                         </button>
                       </div>
                     </div>
-                    {/* 2. UPDATED INDIVIDUAL ITEM PRICE DISPLAY */}
                     <span
                       className="font-semibold my-auto"
                       style={{ color: "var(--text-primary)" }}
                     >
-                      ₹{itemFinalPrice.toLocaleString()}
+                      ₹{(item.price * item.quantity).toLocaleString()}
                     </span>
                   </li>
-                );
-              })}
+                ))}
             </ul>
           )}
         </div>

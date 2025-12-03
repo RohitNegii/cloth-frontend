@@ -19,6 +19,7 @@ interface CartState {
   removeItem: (productId: string) => void;
   getCartTotal: () => number;
   clearCart: () => void;
+  setCart: (items: CartItem[]) => void;
 }
 
 const useCartStore = create(
@@ -28,6 +29,7 @@ const useCartStore = create(
       items: [],
       openCart: () => set({ isCartOpen: true }),
       closeCart: () => set({ isCartOpen: false }),
+      setCart: (items) => set({ items }),
       addItem: (item) => {
         const existingItem = get().items.find((i) => i.product === item.product);
         if (existingItem) {
