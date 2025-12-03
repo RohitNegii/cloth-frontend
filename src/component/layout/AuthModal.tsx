@@ -59,12 +59,8 @@ const AuthModal: React.FC<AuthModalProps> = ({
     }
     setLoading(true);
     try {
-      const { phone, otp, name, email } = formData;
-      const response: any = await userApi.verifyOtp(phone, otp, name, email);
-      // NOTE: In a real app, you would store the token and user data in a global state/context.
-      console.log("Login successful:", response);
+      await login(formData.phone, formData.otp);
       toast.success("Logged in successfully!");
-      login(response.data.user, response.data.token);
       onClose();
     } catch (error: any) {
       toast.error(
