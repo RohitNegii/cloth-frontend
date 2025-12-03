@@ -1,4 +1,4 @@
-'''import create from 'zustand';
+import {create} from 'zustand';
 
 interface CartState {
   isCartOpen: boolean;
@@ -13,4 +13,3 @@ const useCartStore = create<CartState>((set) => ({
 }));
 
 export default useCartStore;
-'''

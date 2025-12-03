@@ -1,4 +1,3 @@
-'''// ProductDetailPage.js (Modified to use local mock API for testing)
 
 "use client";
 
@@ -92,7 +91,7 @@ export default function ProductDetailPage() {
       openAuthModal();
     } else {
       try {
-        await addToCart(product.id, 1, selectedSize, selectedColor);
+        await addToCart(product._id, 1, selectedSize, selectedColor);
         openCart();
       } catch (error) {
         console.error("Error adding to cart:", error);
@@ -271,4 +270,3 @@ export default function ProductDetailPage() {
     </Layout>
   );
 }
-'''

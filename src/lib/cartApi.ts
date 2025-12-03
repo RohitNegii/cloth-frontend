@@ -1,8 +1,7 @@
-'''
 import api from './api';
 
 export const addToCart = (productId: string, quantity: number, size: string, color: string) => {
-  return api.post('/cart', { productId, quantity, size, color });
+  return api.post("/cart/add", { product:productId, quantity, size, color });
 };
 
 export const getCart = () => {
@@ -10,11 +9,10 @@ export const getCart = () => {
 };
 
 export const updateCartItem = (itemId: string, quantity: number) => {
-  return api.put(`/cart/${itemId}`, { quantity });
+  return api.put(`/cart/update/${itemId}`, { quantity });
 };
 
 export const removeFromCart = (itemId: string) => {
-  return api.delete(`/cart/${itemId}`);
+  return api.delete(`/cart/remove/${itemId}`);
 };
 
-'''

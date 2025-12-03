@@ -1,4 +1,4 @@
-'''import create from 'zustand';
+import {create} from 'zustand';
 
 interface AuthModalState {
   isAuthModalOpen: boolean;
@@ -13,4 +13,3 @@ const useAuthModalStore = create<AuthModalState>((set) => ({
 }));
 
 export default useAuthModalStore;
-'''

@@ -1,4 +1,4 @@
-'''"use client";
+"use client";
 import React, { useState, useEffect } from "react";
 import { HiOutlineShoppingCart, HiOutlineMenu, HiOutlineX, HiOutlineUserCircle } from "react-icons/hi";
 import SlidingCartModal from "./CartDropdown";
@@ -123,4 +123,3 @@ const Header: React.FC = () => {
 };
 
 export default Header;
-'''
