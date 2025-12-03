@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { getCart, removeFromCart, updateCartItem } from "@/lib/cartApi";
 import useUserStore from "@/store/userStore";
+import { useRouter } from 'next/navigation';
 
 // 1. UPDATED INTERFACE
 interface CartItem {
@@ -30,6 +31,7 @@ const SlidingCartModal: React.FC<SlidingCartModalProps> = ({
   isOpen,
   onClose,
 }) => {
+  const router = useRouter();
   // Using 'any' type temporarily if the full CartItem structure is complex,
   // but using the updated interface is better.
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
@@ -246,7 +248,7 @@ const SlidingCartModal: React.FC<SlidingCartModalProps> = ({
                 background: "var(--primary-brand)",
                 color: "#fff",
               }}
-              onClick={() => alert("Proceeding to checkout")}
+              onClick={() => { router.push('/checkout'); onClose(); }}
             >
               Proceed to Checkout →
             </button>
