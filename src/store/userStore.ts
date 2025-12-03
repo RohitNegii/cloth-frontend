@@ -1,38 +1,49 @@
-import {create} from 'zustand';
+import { create } from 'zustand';
+import { userApi } from '../lib/userApi';
+
+interface User {
+  _id: string;
+  name: string;
+  email: string;
+  phone: string;
+}
 
 interface UserState {
-  isLoggedIn: boolean;
-  user: { _id: string; name: string; email: string; phone: string } | null;
+  user: User | null;
   token: string | null;
-  login: (user: { _id: string; name: string; email: string; phone: string }, token: string) => void;
+  isLoading: boolean;
+  error: string | null;
+  setUser: (user: User, token: string) => void;
   logout: () => void;
-  initialize: () => void;
+  fetchUser: () => Promise<void>;
 }
 
 const useUserStore = create<UserState>((set) => ({
-  isLoggedIn: false,
   user: null,
-  token: null,
-  login: (user, token) => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('token', token);
-    }
-    set({ isLoggedIn: true, user, token });
+  token: typeof window !== 'undefined' ? localStorage.getItem('token') : null,
+  isLoading: false,
+  error: null,
+  setUser: (user, token) => {
+    localStorage.setItem('token', token);
+    set({ user, token, error: null });
   },
   logout: () => {
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem('token');
-    }
-    set({ isLoggedIn: false, user: null, token: null });
+    localStorage.removeItem('token');
+    set({ user: null, token: null });
   },
-  initialize: () => {
-    if (typeof window !== 'undefined') {
-      const token = localStorage.getItem('token');
-      if (token) {
-        // You might want to fetch user data here using the token
-        // For now, we'll just set the token and isLoggedIn status
-        set({ isLoggedIn: true, token });
+  fetchUser: async () => {
+    set({ isLoading: true, error: null });
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        const response = await userApi.getProfile();
+        set({ user: response.data, isLoading: false });
+      } catch (error) { 
+        set({ isLoading: false, error: 'Failed to fetch user', token: null });
+        localStorage.removeItem('token');
       }
+    } else {
+      set({ isLoading: false });
     }
   },
 }));
