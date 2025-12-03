@@ -1,11 +1,10 @@
-
 import {create} from 'zustand';
 
 interface UserState {
   isLoggedIn: boolean;
-  user: { name: string; email: string; phone: string } | null;
+  user: { _id: string; name: string; email: string; phone: string } | null;
   token: string | null;
-  login: (user: { name: string; email: string; phone: string }, token: string) => void;
+  login: (user: { _id: string; name: string; email: string; phone: string }, token: string) => void;
   logout: () => void;
   initialize: () => void;
 }
