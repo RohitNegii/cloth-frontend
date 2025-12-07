@@ -36,7 +36,7 @@ const ShippingForm = () => {
     };
     try {
       const response = await createOrder(orderPayload);
-      const { razorpayOrder, orderId } = response.data;
+      const { razorpayOrder, razorpayOrderId } = response.data;
 
       const options = {
         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
@@ -47,7 +47,7 @@ const ShippingForm = () => {
         order_id: razorpayOrder.id,
         handler: function (response: any) {
           clearCart();
-          router.push(`/order-confirmation?orderId=${orderId}`);
+          router.push(`/order-confirmation?orderId=${razorpayOrderId}`);
         },
         prefill: {
           name: shippingInfo.name,
