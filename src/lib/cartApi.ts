@@ -8,6 +8,10 @@ export const getCart = () => {
   return api.get('/cart');
 };
 
+export const getCartCount = () => {
+  return api.get('/cart/count');
+};
+
 export const updateCartItem = (itemId: string, quantity: number) => {
   return api.put(`/cart/update/${itemId}`, { quantity });
 };
@@ -15,4 +19,3 @@ export const updateCartItem = (itemId: string, quantity: number) => {
 export const removeFromCart = (itemId: string) => {
   return api.delete(`/cart/remove/${itemId}`);
 };
-
