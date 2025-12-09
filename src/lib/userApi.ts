@@ -8,6 +8,6 @@ export const userApi = {
     return http.post('/auth/verify-otp', { phoneNumber:phone, code:otp, name, email });
   },
   getProfile: () => {
-    return http.get('/users/profile');
+    return http.get("/users/profile");
   },
 };
