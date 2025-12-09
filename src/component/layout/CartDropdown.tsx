@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { getCart, removeFromCart, updateCartItem } from "@/lib/cartApi";
+import { getCart, removeFromCart, updateCartItem, getCartCount } from "@/lib/cartApi";
 import useUserStore from "@/store/userStore";
 import useCartStore from "@/store/cartStore"; // Import useCartStore
 import { useRouter } from 'next/navigation';
@@ -27,7 +27,7 @@ interface SlidingCartModalProps {
 const SlidingCartModal: React.FC<SlidingCartModalProps> = ({ isOpen, onClose }) => {
   const router = useRouter();
   const { token } = useUserStore();
-  const { items: cartItems, setCart, getCartTotal } = useCartStore(); // Use cart store
+  const { items: cartItems, setCart, getCartTotal, setCartCount } = useCartStore(); // Use cart store
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -68,6 +68,8 @@ const SlidingCartModal: React.FC<SlidingCartModalProps> = ({ isOpen, onClose }) 
         color: item.color,
       })) || [];
       setCart(items);
+      const countResponse = await getCartCount();
+      setCartCount(countResponse.count);
     } catch (error) {
       console.error("Error removing from cart:", error);
     }
@@ -90,6 +92,8 @@ const SlidingCartModal: React.FC<SlidingCartModalProps> = ({ isOpen, onClose }) 
         color: item.color,
       })) || [];
       setCart(items);
+      const countResponse = await getCartCount();
+      setCartCount(countResponse.count);
     } catch (error) {
       console.error("Error updating cart item:", error);
     }
