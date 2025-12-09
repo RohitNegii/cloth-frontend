@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import React, { useState, useEffect } from "react";
 import { HiOutlineShoppingCart, HiOutlineMenu, HiOutlineX, HiOutlineUserCircle } from "react-icons/hi";
 import SlidingCartModal from "./CartDropdown";
@@ -15,7 +15,7 @@ const Header: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const { isAuthModalOpen, openAuthModal, closeAuthModal } = useAuthModalStore();
   const [isLogin, setIsLogin] = useState(true);
-  const { user } = useUserStore();
+  const { user, logout } = useUserStore();
   const isLoggedIn = !!user;
   const pathname = usePathname();
 
@@ -80,13 +80,18 @@ const Header: React.FC = () => {
             {/* Auth Buttons or Cart/Profile */}
             <div className="flex items-center space-x-4">
               {isLoggedIn ? (
-                <div className="relative cursor-pointer group" onClick={openCart} aria-label="Open cart">
-                  <HiOutlineShoppingCart className="text-[var(--text-primary)] group-hover:text-[var(--primary-brand)] w-8 h-8" />
-                  {cartCount > 0 && (
-                    <span className="absolute -top-2 -right-3 bg-[var(--buttons-highlight)] text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center border-2 border-[var(--background-light)]">
-                      {cartCount}
-                    </span>
-                  )}
+                 <div className="flex items-center space-x-4">
+                    <div className="relative cursor-pointer group" onClick={openCart} aria-label="Open cart">
+                        <HiOutlineShoppingCart className="text-[var(--text-primary)] group-hover:text-[var(--primary-brand)] w-8 h-8" />
+                        {cartCount > 0 && (
+                            <span className="absolute -top-2 -right-3 bg-[var(--buttons-highlight)] text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center border-2 border-[var(--background-light)]">
+                            {cartCount}
+                            </span>
+                        )}
+                    </div>
+                    <Link href="/profile">
+                        <HiOutlineUserCircle className="text-[var(--text-primary)] hover:text-[var(--primary-brand)] w-8 h-8"/>
+                    </Link>
                 </div>
               ) : (
                 <div className="hidden md:flex items-center space-x-2">
@@ -94,9 +99,6 @@ const Header: React.FC = () => {
                   <button onClick={() => openAuthModalAsLogin(false)} className="px-6 py-2 text-lg font-semibold text-white bg-[var(--buttons-highlight)] rounded-lg hover:opacity-90 transition-opacity shadow-md">Sign Up</button>
                 </div>
               )}
-              <div className="md:hidden flex items-center">
-                {isLoggedIn && <HiOutlineUserCircle className="text-[var(--text-primary)] w-8 h-8"/>}
-              </div>
             </div>
           </div>
         </div>
@@ -117,10 +119,19 @@ const Header: React.FC = () => {
                   {link.label}
                 </Link>
               )})}
-               {!isLoggedIn && (
+               {!isLoggedIn ? (
                 <div className="border-t border-gray-200 mt-4 pt-4 space-y-3">
                     <button onClick={() => openAuthModalAsLogin(true)} className="block w-full text-left px-4 py-3 rounded-lg text-base font-semibold text-[var(--text-secondary)] hover:bg-gray-100">Login</button>
                     <button onClick={() => openAuthModalAsLogin(false)} className="block w-full text-center px-4 py-3 rounded-lg text-base font-semibold text-white bg-[var(--buttons-highlight)] hover:opacity-90">Sign Up</button>
+                </div>
+                ) : (
+                <div className="border-t border-gray-200 mt-4 pt-4 space-y-3">
+                    <Link href="/profile" className="block px-4 py-3 rounded-lg text-base font-semibold text-[var(--text-secondary)] hover:text-[var(--primary-brand)] hover:bg-gray-100" onClick={() => setMenuOpen(false)}>
+                        Profile
+                    </Link>
+                    <button onClick={() => { logout(); setMenuOpen(false); }} className="block w-full text-left px-4 py-3 rounded-lg text-base font-semibold text-[var(--text-secondary)] hover:bg-gray-100">
+                        Logout
+                    </button>
                 </div>
                 )}
             </nav>

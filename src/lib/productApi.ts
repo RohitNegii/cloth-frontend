@@ -1,4 +1,3 @@
-
 import api from './api';
 
 export const getProducts = async () => {
@@ -19,4 +18,12 @@ export const getProductById = async (id: string) => {
         console.error(`Error fetching product with id ${id}:`, error);
         throw error;
     }
+};
+
+export const addReview = (productId: string, rating: number, comment: string) => {
+    return api.post(`/reviews`, { product: productId, rating, comment });
+};
+
+export const getReviews = (productId: string) => {
+    return api.get(`/reviews/product/${productId}`);
 };

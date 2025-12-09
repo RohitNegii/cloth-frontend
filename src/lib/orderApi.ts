@@ -34,6 +34,10 @@ export const trackOrder = (orderId: string) => {
   return api.get(`/orders/${orderId}/track`);
 };
 
+export const getMyOrders = () => {
+  return api.get("/orders/my-orders");
+};
+
 // Admin route
 export const updateOrderStatus = (orderId: string, status: string) => {
   return api.put(`/orders/${orderId}/status`, { status });
@@ -43,4 +47,5 @@ export const orderApi = {
   createOrder,
   trackOrder,
   updateOrderStatus,
+  getMyOrders,
 };
