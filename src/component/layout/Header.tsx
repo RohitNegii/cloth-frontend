@@ -23,8 +23,8 @@ const Header: React.FC = () => {
     const fetchCartCount = async () => {
       if (isLoggedIn) {
         try {
-          const response = await getCartCount();
-          setCartCount(response.count);
+          const response:any = await getCartCount();
+          setCartCount(response.data.count);
         } catch (error) {
           console.error("Failed to fetch cart count:", error);
         }

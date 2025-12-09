@@ -37,7 +37,7 @@ const useUserStore = create<UserState>((set, get) => ({
     const token = localStorage.getItem('token');
     if (token) {
       try {
-        const response = await userApi.getProfile();
+        const response:any = await userApi.getProfile();
         set({ user: response.data, isLoading: false });
       } catch (error) { 
         set({ isLoading: false, error: 'Failed to fetch user', token: null });
@@ -50,7 +50,7 @@ const useUserStore = create<UserState>((set, get) => ({
   login: async (phone, otp) => {
     set({ isLoading: true, error: null });
     try {
-      const response = await userApi.verifyOtp(phone, otp);
+      const response:any = await userApi.verifyOtp(phone, otp);
       if (response.data && response.data.user && response.data.token) {
         get().setUser(response.data.user, response.data.token);
         set({ isLoading: false });
