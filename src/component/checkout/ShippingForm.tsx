@@ -1,25 +1,27 @@
-'use client';
-import React, { useState } from 'react';
-import useCartStore from '../../store/cartStore';
-import { createOrder } from '../../lib/orderApi';
-import useUserStore from '../../store/userStore';
-import { useRouter } from 'next/navigation';
-import SuccessModal from './SuccessModal';
+"use client";
+import React, { useState } from "react";
+import useCartStore from "../../store/cartStore";
+import { createOrder } from "../../lib/orderApi";
+import useUserStore from "../../store/userStore";
+import { useRouter } from "next/navigation";
+import SuccessModal from "./SuccessModal";
 
 const ShippingForm = () => {
   const { items, getCartTotal, clearCart } = useCartStore();
   const { user } = useUserStore();
   const router = useRouter();
+
   const [shippingInfo, setShippingInfo] = useState({
-    name: '',
-    phone: '',
-    address: '',
-    city: '',
-    state: '',
-    pincode: '',
+    name: "",
+    phone: "",
+    address: "",
+    city: "",
+    state: "",
+    pincode: "",
   });
+
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [orderId, setOrderId] = useState('');
+  const [orderId, setOrderId] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setShippingInfo({ ...shippingInfo, [e.target.name]: e.target.value });
@@ -28,27 +30,31 @@ const ShippingForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) {
-      alert('Please login to continue');
+      alert("Please login to continue");
       return;
     }
+
     const orderPayload = {
       userId: user._id,
-      items: items.map(item => ({...item, product: item.product})),
+      items: items.map((item) => ({ ...item, product: item.product })),
       totalPrice: getCartTotal(),
-      shippingAddress: { ...shippingInfo, country: 'India' },
+      shippingAddress: { ...shippingInfo, country: "India" },
     };
+
     try {
       const response = await createOrder(orderPayload);
-      const { razorpayOrder, razorpayOrderId } = response.data;
+
+      const { order, razorpayOrder } = response.data;
+      const razorpayOrderId = order.razorpayOrderId;
 
       const options = {
         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
         amount: razorpayOrder.amount,
         currency: razorpayOrder.currency,
-        name: 'Your Company Name',
-        description: 'Test Transaction',
+        name: "Your Company Name",
+        description: "Test Transaction",
         order_id: razorpayOrder.id,
-        handler: function (response: any) {
+        handler: function () {
           setOrderId(razorpayOrderId);
           setIsModalOpen(true);
         },
@@ -57,65 +63,174 @@ const ShippingForm = () => {
           contact: shippingInfo.phone,
         },
         theme: {
-          color: '#3399cc'
-        }
+          color: "var(--buttons-highlight)",
+        },
       };
 
       const rzp1 = new (window as any).Razorpay(options);
       rzp1.open();
-
     } catch (error) {
-      console.error('Order creation failed', error);
-      alert('Something went wrong!');
+      console.error("Order creation failed", error);
+      alert("Something went wrong!");
     }
   };
-  
+
   const handleCloseModal = () => {
     setIsModalOpen(false);
     clearCart();
-    router.push('/');
+    router.push("/");
   };
-
 
   return (
     <>
-     <form onSubmit={handleSubmit} className="space-y-6 bg-white px-4 py-6 rounded-lg shadow-md">
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="col-span-1">
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700">Full Name</label>
-            <input type="text" id="name" name="name" placeholder="John Doe" onChange={handleChange} required className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
-        </div>
-        <div className="col-span-1">
-            <label htmlFor="phone" className="block text-sm font-medium text-gray-700">Phone Number</label>
-            <input type="text" id="phone" name="phone" placeholder="123-456-7890" onChange={handleChange} required className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
-        </div>
-        <div className="col-span-1 md:col-span-2">
-            <label htmlFor="address" className="block text-sm font-medium text-gray-700">Street Address</label>
-            <input type="text" id="address" name="address" placeholder="123 Main St" onChange={handleChange} required className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
-        </div>
-        <div className="col-span-1">
-            <label htmlFor="city" className="block text-sm font-medium text-gray-700">City</label>
-            <input type="text" id="city" name="city" placeholder="Anytown" onChange={handleChange} required className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
-        </div>
-        <div className="col-span-1">
-            <label htmlFor="state" className="block text-sm font-medium text-gray-700">State / Province</label>
-            <input type="text" id="state" name="state" placeholder="CA" onChange={handleChange} required className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
-        </div>
-        <div className="col-span-1">
-            <label htmlFor="pincode" className="block text-sm font-medium text-gray-700">ZIP / Postal Code</label>
-            <input type="text" id="pincode" name="pincode" placeholder="12345" onChange={handleChange} required className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
-        </div>
-    </div>
+      <div className="min-h-screen bg-[var(--background-light)] flex items-center justify-center px-4 py-8">
+        <form
+          onSubmit={handleSubmit}
+          className="w-full max-w-3xl bg-white rounded-2xl shadow-xl p-6 md:p-10 space-y-8 border border-[var(--secondary-accent)]/30"
+        >
+          {/* Heading */}
+          <div className="text-center space-y-2">
+            <h2 className="text-3xl font-bold text-[var(--primary-brand)]">
+              Shipping Details
+            </h2>
+            <p className="text-sm text-[var(--text-secondary)]">
+              Please enter your address to complete your order
+            </p>
+          </div>
 
-    <button type="submit" className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-        Place Order
-    </button>
-</form>
+          {/* Form Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Name */}
+            <div>
+              <label className="block text-sm font-medium text-[var(--text-primary)]">
+                Full Name
+              </label>
+              <input
+                type="text"
+                name="name"
+                placeholder="John Doe"
+                onChange={handleChange}
+                required
+                className="mt-2 w-full rounded-lg border border-gray-200 px-4 py-3 text-sm 
+                  bg-[var(--background-light)]
+                  focus:ring-2 focus:ring-[var(--buttons-highlight)]
+                  focus:border-[var(--buttons-highlight)]
+                  transition"
+              />
+            </div>
+
+            {/* Phone */}
+            <div>
+              <label className="block text-sm font-medium text-[var(--text-primary)]">
+                Phone Number
+              </label>
+              <input
+                type="text"
+                name="phone"
+                placeholder="9876543210"
+                onChange={handleChange}
+                required
+                className="mt-2 w-full rounded-lg border border-gray-200 px-4 py-3 text-sm 
+                  bg-[var(--background-light)]
+                  focus:ring-2 focus:ring-[var(--buttons-highlight)]
+                  focus:border-[var(--buttons-highlight)]
+                  transition"
+              />
+            </div>
+
+            {/* Address */}
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium text-[var(--text-primary)]">
+                Street Address
+              </label>
+              <input
+                type="text"
+                name="address"
+                placeholder="House no., Street name"
+                onChange={handleChange}
+                required
+                className="mt-2 w-full rounded-lg border border-gray-200 px-4 py-3 text-sm 
+                  bg-[var(--background-light)]
+                  focus:ring-2 focus:ring-[var(--buttons-highlight)]
+                  focus:border-[var(--buttons-highlight)]
+                  transition"
+              />
+            </div>
+
+            {/* City */}
+            <div>
+              <label className="block text-sm font-medium text-[var(--text-primary)]">
+                City
+              </label>
+              <input
+                type="text"
+                name="city"
+                placeholder="Your City"
+                onChange={handleChange}
+                required
+                className="mt-2 w-full rounded-lg border border-gray-200 px-4 py-3 text-sm 
+                  bg-[var(--background-light)]
+                  focus:ring-2 focus:ring-[var(--buttons-highlight)]
+                  focus:border-[var(--buttons-highlight)]
+                  transition"
+              />
+            </div>
+
+            {/* State */}
+            <div>
+              <label className="block text-sm font-medium text-[var(--text-primary)]">
+                State
+              </label>
+              <input
+                type="text"
+                name="state"
+                placeholder="State"
+                onChange={handleChange}
+                required
+                className="mt-2 w-full rounded-lg border border-gray-200 px-4 py-3 text-sm 
+                  bg-[var(--background-light)]
+                  focus:ring-2 focus:ring-[var(--buttons-highlight)]
+                  focus:border-[var(--buttons-highlight)]
+                  transition"
+              />
+            </div>
+
+            {/* Pincode */}
+            <div>
+              <label className="block text-sm font-medium text-[var(--text-primary)]">
+                Pincode
+              </label>
+              <input
+                type="text"
+                name="pincode"
+                placeholder="246473"
+                onChange={handleChange}
+                required
+                className="mt-2 w-full rounded-lg border border-gray-200 px-4 py-3 text-sm 
+                  bg-[var(--background-light)]
+                  focus:ring-2 focus:ring-[var(--buttons-highlight)]
+                  focus:border-[var(--buttons-highlight)]
+                  transition"
+              />
+            </div>
+          </div>
+
+          {/* Submit Button */}
+          <button
+            type="submit"
+            className="w-full rounded-xl bg-[var(--buttons-highlight)] py-3 text-sm font-semibold text-white tracking-wide
+              shadow-lg hover:shadow-xl hover:brightness-110 transition-all active:scale-[0.98]"
+          >
+            Place Order
+          </button>
+        </form>
+      </div>
+
       {isModalOpen && orderId && (
-        <SuccessModal 
-          orderId={orderId} 
-          isOpen={isModalOpen} 
-          onClose={handleCloseModal} 
+        <SuccessModal
+          orderId={orderId}
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
         />
       )}
     </>
