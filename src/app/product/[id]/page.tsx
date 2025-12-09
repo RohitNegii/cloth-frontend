@@ -11,7 +11,7 @@ import { getProductById } from "@/lib/productApi";
 import { useParams } from "next/navigation";
 import useUserStore from "@/store/userStore";
 import useAuthModalStore from "@/store/authModalStore";
-import { addToCart } from "@/lib/cartApi";
+import { addToCart, getCartCount } from "@/lib/cartApi";
 import useCartStore from "@/store/cartStore";
 
 // ⚠️ KEEPING THE RELATED PRODUCTS DATA AS REQUESTED ⚠️
@@ -58,7 +58,7 @@ export default function ProductDetailPage() {
   const params = useParams() || { id: "test-product-id" };
   const { isLoggedIn } = useUserStore();
   const { openAuthModal } = useAuthModalStore();
-  const { openCart } = useCartStore();
+  const { openCart, setCartCount } = useCartStore();
 
   const [product, setProduct] = useState<any>(null);
   const [selectedSize, setSelectedSize] = useState("");
@@ -92,6 +92,8 @@ export default function ProductDetailPage() {
     } else {
       try {
         await addToCart(product._id, 1, selectedSize, selectedColor);
+        const response = await getCartCount();
+        setCartCount(response.count);
         openCart();
       } catch (error) {
         console.error("Error adding to cart:", error);

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { HiOutlineShoppingCart, HiOutlineMenu, HiOutlineX, HiOutlineUserCircle } from "react-icons/hi";
 import SlidingCartModal from "./CartDropdown";
 import Link from "next/link";
@@ -8,16 +8,31 @@ import AuthModal from "./AuthModal";
 import useUserStore from "@/store/userStore";
 import useCartStore from "@/store/cartStore";
 import useAuthModalStore from "@/store/authModalStore";
+import { getCartCount } from "@/lib/cartApi";
 
 const Header: React.FC = () => {
-  const { isCartOpen, openCart, closeCart, items: cartItems } = useCartStore();
+  const { isCartOpen, openCart, closeCart, cartCount, setCartCount } = useCartStore();
   const [menuOpen, setMenuOpen] = useState(false);
   const { isAuthModalOpen, openAuthModal, closeAuthModal } = useAuthModalStore();
   const [isLogin, setIsLogin] = useState(true);
   const { user } = useUserStore();
   const isLoggedIn = !!user;
-  const cartItemCount = cartItems.length;
   const pathname = usePathname();
+
+  useEffect(() => {
+    const fetchCartCount = async () => {
+      if (isLoggedIn) {
+        try {
+          const response = await getCartCount();
+          setCartCount(response.count);
+        } catch (error) {
+          console.error("Failed to fetch cart count:", error);
+        }
+      }
+    };
+
+    fetchCartCount();
+  }, [isLoggedIn, setCartCount]);
 
   const navLinks = [
     { href: "/", label: "Home" },
@@ -67,9 +82,9 @@ const Header: React.FC = () => {
               {isLoggedIn ? (
                 <div className="relative cursor-pointer group" onClick={openCart} aria-label="Open cart">
                   <HiOutlineShoppingCart className="text-[var(--text-primary)] group-hover:text-[var(--primary-brand)] w-8 h-8" />
-                  {cartItemCount > 0 && (
+                  {cartCount > 0 && (
                     <span className="absolute -top-2 -right-3 bg-[var(--buttons-highlight)] text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center border-2 border-[var(--background-light)]">
-                      {cartItemCount}
+                      {cartCount}
                     </span>
                   )}
                 </div>
