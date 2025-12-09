@@ -42,9 +42,9 @@ const ShippingForm = () => {
     };
 
     try {
-      const response = await createOrder(orderPayload);
+      const response:any = await createOrder(orderPayload);
 
-      const { order, razorpayOrder } = response.data;
+      const { order, razorpayOrder }  = response.data;
       const razorpayOrderId = order.razorpayOrderId;
 
       const options = {

@@ -35,7 +35,7 @@ const SlidingCartModal: React.FC<SlidingCartModalProps> = ({ isOpen, onClose }) 
       const fetchCart = async () => {
         try {
           setLoading(true);
-          const response = await getCart();
+          const response:any = await getCart();
           const items = response?.data?.items.map((item: any) => ({
             product: item.product._id,
             name: item.product.name,
@@ -58,7 +58,7 @@ const SlidingCartModal: React.FC<SlidingCartModalProps> = ({ isOpen, onClose }) 
   const handleRemoveFromCart = async (itemId: string) => {
     try {
       await removeFromCart(itemId);
-      const response = await getCart();
+      const response:any = await getCart();
       const items = response?.data?.items.map((item: any) => ({
         product: item.product._id,
         name: item.product.name,
@@ -80,7 +80,7 @@ const SlidingCartModal: React.FC<SlidingCartModalProps> = ({ isOpen, onClose }) 
     }
     try {
       await updateCartItem(itemId, quantity);
-      const response = await getCart();
+      const response:any = await getCart();
       const items = response?.data?.items.map((item: any) => ({
         product: item.product._id,
         name: item.product.name,
