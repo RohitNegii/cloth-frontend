@@ -5,9 +5,7 @@ import "slick-carousel/slick/slick-theme.css";
 import "./globals.css";
 import { Toaster } from 'react-hot-toast';
 import Script from "next/script";
-import Navbar from "@/component/layout/Navbar";
 import AuthProvider from "@/component/layout/AuthProvider";
-
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,9 +32,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable}`}
       >
-        <Toaster />
-        {children}
-        <Script src="https://checkout.razorpay.com/v1/checkout.js" />
+        <AuthProvider>
+          <Toaster />
+          {children}
+          <Script src="https://checkout.razorpay.com/v1/checkout.js" />
+        </AuthProvider>
       </body>
     </html>
   );
