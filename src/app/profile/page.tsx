@@ -4,15 +4,17 @@ import React, { useState, useEffect } from 'react';
 import { getMyOrders } from '@/lib/orderApi';
 import { addReview } from '@/lib/productApi';
 import useUserStore from '@/store/userStore';
-import { FaStar } from 'react-icons/fa';
+import { FaStar, FaUserCircle } from 'react-icons/fa';
 import Layout from '@/component/layout/Layout';
 import OrderHistory from '@/component/profile/OrderHistory';
+import { userApi } from '@/lib/userApi';
 
 const ProfilePage = () => {
   const [activeTab, setActiveTab] = useState('current');
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [review, setReview] = useState<{ [key: string]: { rating: number; comment: string } }>({});
+  const [profile, setProfile] = useState<any>(null);
   const { user } = useUserStore();
 
   useEffect(() => {
@@ -32,6 +34,21 @@ const ProfilePage = () => {
       fetchOrders();
     }
   }, [user]);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await userApi.getProfile();
+        setProfile(response.data);
+      } catch (error) {
+        console.error('Error fetching profile:', error);
+      }
+    };
+
+    if (activeTab === 'profile') {
+      fetchProfile();
+    }
+  }, [activeTab]);
 
   const handleReviewSubmit = async (productId: string) => {
     const { rating, comment } = review[productId];
@@ -75,7 +92,7 @@ const ProfilePage = () => {
           <button onClick={() => setActiveTab('profile')} className={`py-2 px-4 text-sm font-medium ${activeTab === 'profile' ? 'border-b-2 border-primary-brand text-primary-brand' : 'text-gray-500 hover:text-gray-700'}`}>Profile</button>
         </div>
 
-        {loading && <p className="text-center py-12">Loading...</p>}
+        {loading && activeTab !== 'profile' && <p className="text-center py-12">Loading...</p>}
 
         {activeTab === 'current' && (
             <OrderHistory orders={currentOrders} title="Current Orders" />
@@ -117,14 +134,18 @@ const ProfilePage = () => {
           </div>
         )}
 
-        {activeTab === 'profile' && user && (
-          <div className="bg-white shadow-lg rounded-xl p-8">
-            <h2 className="text-3xl font-bold tracking-tight text-gray-900 mb-6">Profile</h2>
-            <div className="space-y-4">
-                <p className="text-md"><strong>Name:</strong> {user.name}</p>
-                <p className="text-md"><strong>Email:</strong> {user.email}</p>
-                <p className="text-md"><strong>Phone:</strong> {user.phone}</p>
-            </div>
+        {activeTab === 'profile' && (
+          <div className="bg-white shadow-xl rounded-2xl p-8">
+            {profile ? (
+                <div className="flex items-center space-x-6">
+                    <FaUserCircle className="text-7xl text-gray-400" />
+                    <div className="space-y-2">
+                        <h2 className="text-3xl font-bold text-gray-800">{profile.name}</h2>
+                        <p className="text-md text-gray-600">{profile.email}</p>
+                        <p className="text-md text-gray-600">{profile.phone}</p>
+                    </div>
+                </div>
+            ) : <p>Loading profile...</p>}
           </div>
         )}
       </div>
