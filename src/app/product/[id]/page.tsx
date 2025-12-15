@@ -56,7 +56,7 @@ const relatedProducts = [
 
 export default function ProductDetailPage() {
   const params = useParams() || { id: "test-product-id" };
-  const { isLoggedIn } = useUserStore();
+  const { user } = useUserStore();
   const { openAuthModal } = useAuthModalStore();
   const { openCart, setCartCount } = useCartStore();
 
@@ -87,7 +87,7 @@ export default function ProductDetailPage() {
   }, [params.id]);
 
   const handleAddToCart = async () => {
-    if (!isLoggedIn) {
+    if (!user) {
       openAuthModal();
     } else {
       try {

@@ -1,9 +1,14 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { getCart, removeFromCart, updateCartItem, getCartCount } from "@/lib/cartApi";
+import {
+  getCart,
+  removeFromCart,
+  updateCartItem,
+  getCartCount,
+} from "@/lib/cartApi";
 import useUserStore from "@/store/userStore";
 import useCartStore from "@/store/cartStore"; // Import useCartStore
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 
 interface CartItem {
   id: number;
@@ -24,10 +29,18 @@ interface SlidingCartModalProps {
   onClose: () => void;
 }
 
-const SlidingCartModal: React.FC<SlidingCartModalProps> = ({ isOpen, onClose }) => {
+const SlidingCartModal: React.FC<SlidingCartModalProps> = ({
+  isOpen,
+  onClose,
+}) => {
   const router = useRouter();
   const { token } = useUserStore();
-  const { items: cartItems, setCart, getCartTotal, setCartCount } = useCartStore(); // Use cart store
+  const {
+    items: cartItems,
+    setCart,
+    getCartTotal,
+    setCartCount,
+  } = useCartStore(); // Use cart store
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -35,15 +48,17 @@ const SlidingCartModal: React.FC<SlidingCartModalProps> = ({ isOpen, onClose }) 
       const fetchCart = async () => {
         try {
           setLoading(true);
-          const response:any = await getCart();
-          const items = response?.data?.items.map((item: any) => ({
-            product: item.product._id,
-            name: item.product.name,
-            quantity: item.quantity,
-            price: item.product.price,
-            size: item.size,
-            color: item.color,
-          })) || [];
+          const response: any = await getCart();
+          const items =
+            response?.data?.items.map((item: any) => ({
+              product: item.product._id,
+              name: item.product.name,
+              quantity: item.quantity,
+              price: item.product.price,
+              size: item.size,
+              color: item.color,
+              _id: item._id,
+            })) || [];
           setCart(items);
         } catch (error) {
           console.error("Error fetching cart:", error);
@@ -58,15 +73,17 @@ const SlidingCartModal: React.FC<SlidingCartModalProps> = ({ isOpen, onClose }) 
   const handleRemoveFromCart = async (itemId: string) => {
     try {
       await removeFromCart(itemId);
-      const response:any = await getCart();
-      const items = response?.data?.items.map((item: any) => ({
-        product: item.product._id,
-        name: item.product.name,
-        quantity: item.quantity,
-        price: item.product.price,
-        size: item.size,
-        color: item.color,
-      })) || [];
+      const response: any = await getCart();
+      const items =
+        response?.data?.items.map((item: any) => ({
+          product: item.product._id,
+          name: item.product.name,
+          quantity: item.quantity,
+          price: item.product.price,
+          size: item.size,
+          color: item.color,
+          _id: item._id,
+        })) || [];
       setCart(items);
       const countResponse = await getCartCount();
       setCartCount(countResponse.count);
@@ -82,15 +99,17 @@ const SlidingCartModal: React.FC<SlidingCartModalProps> = ({ isOpen, onClose }) 
     }
     try {
       await updateCartItem(itemId, quantity);
-      const response:any = await getCart();
-      const items = response?.data?.items.map((item: any) => ({
-        product: item.product._id,
-        name: item.product.name,
-        quantity: item.quantity,
-        price: item.product.price,
-        size: item.size,
-        color: item.color,
-      })) || [];
+      const response: any = await getCart();
+      const items =
+        response?.data?.items.map((item: any) => ({
+          product: item.product._id,
+          name: item.product.name,
+          quantity: item.quantity,
+          price: item.product.price,
+          size: item.size,
+          color: item.color,
+          _id: item._id,
+        })) || [];
       setCart(items);
       const countResponse = await getCartCount();
       setCartCount(countResponse.count);
@@ -107,7 +126,9 @@ const SlidingCartModal: React.FC<SlidingCartModalProps> = ({ isOpen, onClose }) 
       <div
         onClick={onClose}
         className={`fixed inset-0 z-30 transition-opacity duration-300 ${
-          isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+          isOpen
+            ? "opacity-100 pointer-events-auto"
+            : "opacity-0 pointer-events-none"
         }`}
         style={{ background: "rgba(0,0,0,0.5)", backdropFilter: "blur(4px)" }}
       />
@@ -153,69 +174,69 @@ const SlidingCartModal: React.FC<SlidingCartModalProps> = ({ isOpen, onClose }) 
           ) : (
             <ul className="space-y-4">
               {cartItems.map((item) => (
-                  <li
-                    key={item.product}
-                    className="flex gap-4 p-4 rounded-xl border shadow hover:shadow-md transition"
-                    style={{
-                      background: "#fff",
-                      borderColor: "var(--secondary-accent)",
-                    }}
-                  >
-                    {/* <img
+                <li
+                  key={item.product}
+                  className="flex gap-4 p-4 rounded-xl border shadow hover:shadow-md transition"
+                  style={{
+                    background: "#fff",
+                    borderColor: "var(--secondary-accent)",
+                  }}
+                >
+                  {/* <img
                       src={image}
                       alt={name}
                       className="w-16 h-16 object-cover rounded-lg"
                     /> */}
-                    <div className="flex flex-col flex-grow justify-center">
-                      <span
-                        className="font-semibold"
-                        style={{ color: "var(--text-primary)" }}
-                      >
-                        {item.name} ({item.color}, {item.size})
-                      </span>
-                      <span
-                        className="text-sm"
-                        style={{ color: "var(--text-secondary)" }}
-                      >
-                        ₹{item.price.toLocaleString()} × {item.quantity}
-                      </span>
-                      {/* Quantity controls */}
-                      <div className="flex items-center gap-2 mt-2">
-                        <button
-                          onClick={() =>
-                            handleUpdateQuantity(item.product, item.quantity - 1)
-                          }
-                          className="w-7 h-7 border rounded-md flex items-center justify-center transition"
-                          style={{
-                            borderColor: "var(--secondary-accent)",
-                            color: "var(--primary-brand)",
-                          }}
-                        >
-                          -
-                        </button>
-                        <span className="font-medium">{item.quantity}</span>
-                        <button
-                          onClick={() =>
-                            handleUpdateQuantity(item.product, item.quantity + 1)
-                          }
-                          className="w-7 h-7 border rounded-md flex items-center justify-center transition"
-                          style={{
-                            borderColor: "var(--secondary-accent)",
-                            color: "var(--primary-brand)",
-                          }}
-                        >
-                          +
-                        </button>
-                      </div>
-                    </div>
+                  <div className="flex flex-col flex-grow justify-center">
                     <span
-                      className="font-semibold my-auto"
+                      className="font-semibold"
                       style={{ color: "var(--text-primary)" }}
                     >
-                      ₹{(item.price * item.quantity).toLocaleString()}
+                      {item.name} ({item.color}, {item.size})
                     </span>
-                  </li>
-                ))}
+                    <span
+                      className="text-sm"
+                      style={{ color: "var(--text-secondary)" }}
+                    >
+                      ₹{item.price.toLocaleString()} × {item.quantity}
+                    </span>
+                    {/* Quantity controls */}
+                    <div className="flex items-center gap-2 mt-2">
+                      <button
+                        onClick={() =>
+                          handleUpdateQuantity(item._id, item.quantity - 1)
+                        }
+                        className="w-7 h-7 border rounded-md flex items-center justify-center transition"
+                        style={{
+                          borderColor: "var(--secondary-accent)",
+                          color: "var(--primary-brand)",
+                        }}
+                      >
+                        -
+                      </button>
+                      <span className="font-medium">{item.quantity}</span>
+                      <button
+                        onClick={() =>
+                          handleUpdateQuantity(item.product, item.quantity + 1)
+                        }
+                        className="w-7 h-7 border rounded-md flex items-center justify-center transition"
+                        style={{
+                          borderColor: "var(--secondary-accent)",
+                          color: "var(--primary-brand)",
+                        }}
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+                  <span
+                    className="font-semibold my-auto"
+                    style={{ color: "var(--text-primary)" }}
+                  >
+                    ₹{(item.price * item.quantity).toLocaleString()}
+                  </span>
+                </li>
+              ))}
             </ul>
           )}
         </div>
@@ -241,7 +262,10 @@ const SlidingCartModal: React.FC<SlidingCartModalProps> = ({ isOpen, onClose }) 
                 background: "var(--primary-brand)",
                 color: "#fff",
               }}
-              onClick={() => { router.push('/checkout'); onClose(); }}
+              onClick={() => {
+                router.push("/checkout");
+                onClose();
+              }}
             >
               Proceed to Checkout →
             </button>
