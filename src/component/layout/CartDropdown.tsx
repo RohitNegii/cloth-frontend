@@ -217,7 +217,7 @@ const SlidingCartModal: React.FC<SlidingCartModalProps> = ({
                       <span className="font-medium">{item.quantity}</span>
                       <button
                         onClick={() =>
-                          handleUpdateQuantity(item.product, item.quantity + 1)
+                          handleUpdateQuantity(item._id, item.quantity + 1)
                         }
                         className="w-7 h-7 border rounded-md flex items-center justify-center transition"
                         style={{
