@@ -6,6 +6,7 @@ import { addReview } from '@/lib/productApi';
 import useUserStore from '@/store/userStore';
 import { FaStar } from 'react-icons/fa';
 import Layout from '@/component/layout/Layout';
+import OrderHistory from '@/component/profile/OrderHistory';
 
 const ProfilePage = () => {
   const [activeTab, setActiveTab] = useState('current');
@@ -67,39 +68,26 @@ const ProfilePage = () => {
 
   return (
     <Layout>
-      <div className="max-w-4xl mx-auto py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="flex border-b mb-8">
-          <button onClick={() => setActiveTab('current')} className={`py-2 px-4 ${activeTab === 'current' ? 'border-b-2 border-primary-brand' : ''}`}>Current Orders</button>
-          <button onClick={() => setActiveTab('past')} className={`py-2 px-4 ${activeTab === 'past' ? 'border-b-2 border-primary-brand' : ''}`}>Past Orders</button>
-          <button onClick={() => setActiveTab('profile')} className={`py-2 px-4 ${activeTab === 'profile' ? 'border-b-2 border-primary-brand' : ''}`}>Profile</button>
+          <button onClick={() => setActiveTab('current')} className={`py-2 px-4 text-sm font-medium ${activeTab === 'current' ? 'border-b-2 border-primary-brand text-primary-brand' : 'text-gray-500 hover:text-gray-700'}`}>Current Orders</button>
+          <button onClick={() => setActiveTab('past')} className={`py-2 px-4 text-sm font-medium ${activeTab === 'past' ? 'border-b-2 border-primary-brand text-primary-brand' : 'text-gray-500 hover:text-gray-700'}`}>Past Orders</button>
+          <button onClick={() => setActiveTab('profile')} className={`py-2 px-4 text-sm font-medium ${activeTab === 'profile' ? 'border-b-2 border-primary-brand text-primary-brand' : 'text-gray-500 hover:text-gray-700'}`}>Profile</button>
         </div>
 
-        {loading && <p>Loading...</p>}
+        {loading && <p className="text-center py-12">Loading...</p>}
 
         {activeTab === 'current' && (
-          <div>
-            <h2 className="text-2xl font-bold mb-4">Current Orders</h2>
-            {currentOrders.map(order => (
-              <div key={order._id} className="border p-4 mb-4 rounded-lg">
-                <p><strong>Order ID:</strong> {order._id}</p>
-                <p><strong>Status:</strong> {order.status}</p>
-                <p><strong>Total:</strong> ${order.totalPrice}</p>
-                {/* Add tracking details here */}
-              </div>
-            ))}
-          </div>
+            <OrderHistory orders={currentOrders} title="Current Orders" />
         )}
 
         {activeTab === 'past' && (
           <div>
-            <h2 className="text-2xl font-bold mb-4">Past Orders</h2>
+            <OrderHistory orders={pastOrders} title="Past Orders" />
             {pastOrders.map(order => (
-              <div key={order._id} className="border p-4 mb-4 rounded-lg">
-                <p><strong>Order ID:</strong> {order._id}</p>
-                <p><strong>Status:</strong> {order.status}</p>
-                <p><strong>Total:</strong> ${order.totalPrice}</p>
+              <div key={order._id} className="border p-4 mb-4 rounded-lg bg-white shadow-md">
                 <div>
-                  <h3 className="font-semibold mt-4">Products</h3>
+                  <h3 className="font-semibold mt-4 text-lg">Products</h3>
                   {order.items.map((item: any) => (
                     <div key={item.product._id} className="border-t mt-4 pt-4">
                       <p><strong>{item.product.name}</strong></p>
@@ -114,11 +102,11 @@ const ProfilePage = () => {
                           <h4 className="font-semibold mt-2">Leave a Review</h4>
                           <div className="flex my-2">{renderStars(review[item.product._id]?.rating || 0, item.product._id, true)}</div>
                           <textarea
-                            className="w-full border rounded p-2"
+                            className="w-full border rounded p-2 text-sm"
                             placeholder="Your review..."
                             onChange={(e) => handleReviewChange(item.product._id, review[item.product._id]?.rating || 0, e.target.value)}
                           ></textarea>
-                          <button onClick={() => handleReviewSubmit(item.product._id)} className="bg-primary-brand text-white px-4 py-2 rounded mt-2">Submit Review</button>
+                          <button onClick={() => handleReviewSubmit(item.product._id)} className="bg-primary-brand text-white px-4 py-2 rounded mt-2 text-sm">Submit Review</button>
                         </div>
                       )}
                     </div>
@@ -130,11 +118,13 @@ const ProfilePage = () => {
         )}
 
         {activeTab === 'profile' && user && (
-          <div>
-            <h2 className="text-2xl font-bold mb-4">Profile</h2>
-            <p><strong>Name:</strong> {user.name}</p>
-            <p><strong>Email:</strong> {user.email}</p>
-            <p><strong>Phone:</strong> {user.phone}</p>
+          <div className="bg-white shadow-lg rounded-xl p-8">
+            <h2 className="text-3xl font-bold tracking-tight text-gray-900 mb-6">Profile</h2>
+            <div className="space-y-4">
+                <p className="text-md"><strong>Name:</strong> {user.name}</p>
+                <p className="text-md"><strong>Email:</strong> {user.email}</p>
+                <p className="text-md"><strong>Phone:</strong> {user.phone}</p>
+            </div>
           </div>
         )}
       </div>
