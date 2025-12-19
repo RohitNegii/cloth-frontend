@@ -53,15 +53,26 @@ const Header: React.FC = () => {
           <div className="flex items-center justify-between h-24">
             {/* Mobile Menu Button */}
             <div className="md:hidden">
-              <button onClick={() => setMenuOpen(!menuOpen)} className="text-[var(--text-primary)] hover:text-[var(--primary-brand)] focus:outline-none">
-                {menuOpen ? <HiOutlineX size={28} /> : <HiOutlineMenu size={28} />}
+              <button
+                onClick={() => setMenuOpen(!menuOpen)}
+                className="text-[var(--text-primary)] hover:text-[var(--primary-brand)] focus:outline-none"
+              >
+                {menuOpen ? (
+                  <HiOutlineX size={28} />
+                ) : (
+                  <HiOutlineMenu size={28} />
+                )}
               </button>
             </div>
 
             {/* Brand Logo */}
             <div className="flex-shrink-0">
               <Link href="/">
-                <img src="https://i.ibb.co/Vt0wS0v/logo-removebg-preview.png" alt="Uncommon Threads Logo" className="h-20 w-auto" />
+                <img
+                  src="https://i.ibb.co/Vt0wS0v/logo-removebg-preview.png"
+                  alt="Uncommon Threads Logo"
+                  className="h-20 w-auto"
+                />
               </Link>
             </div>
 
@@ -70,7 +81,15 @@ const Header: React.FC = () => {
               {navLinks.map((link) => {
                 const isActive = pathname === link.href;
                 return (
-                  <Link key={link.href} href={link.href} className={`text-lg font-semibold transition-colors duration-300 ${isActive ? 'text-[var(--primary-brand)] border-b-2 border-[var(--primary-brand)]' : 'text-[var(--text-secondary)] hover:text-[var(--primary-brand)]'}`}>
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className={`text-lg font-semibold transition-colors duration-300 ${
+                      isActive
+                        ? "text-[var(--primary-brand)] border-b-2 border-[var(--primary-brand)]"
+                        : "text-[var(--text-secondary)] hover:text-[var(--primary-brand)]"
+                    }`}
+                  >
                     {link.label}
                   </Link>
                 );
@@ -80,23 +99,37 @@ const Header: React.FC = () => {
             {/* Auth Buttons or Cart/Profile */}
             <div className="flex items-center space-x-4">
               {isLoggedIn ? (
-                 <div className="flex items-center space-x-4">
-                    <div className="relative cursor-pointer group" onClick={openCart} aria-label="Open cart">
-                        <HiOutlineShoppingCart className="text-[var(--text-primary)] group-hover:text-[var(--primary-brand)] w-8 h-8" />
-                        {cartCount > 0 && (
-                            <span className="absolute -top-2 -right-3 bg-[var(--buttons-highlight)] text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center border-2 border-[var(--background-light)]">
-                            {cartCount}
-                            </span>
-                        )}
-                    </div>
-                    <Link href="/profile">
-                        <HiOutlineUserCircle className="text-[var(--text-primary)] hover:text-[var(--primary-brand)] w-8 h-8"/>
-                    </Link>
+                <div className="flex items-center space-x-4">
+                  <div
+                    className="relative cursor-pointer group"
+                    onClick={openCart}
+                    aria-label="Open cart"
+                  >
+                    <HiOutlineShoppingCart className="text-[var(--text-primary)] group-hover:text-[var(--primary-brand)] w-8 h-8" />
+                    {cartCount > 0 && (
+                      <span className="absolute -top-2 -right-3 bg-[var(--buttons-highlight)] text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center border-2 border-[var(--background-light)]">
+                        {cartCount}
+                      </span>
+                    )}
+                  </div>
+                  <Link href="/profile/current-orders">
+                    <HiOutlineUserCircle className="text-[var(--text-primary)] hover:text-[var(--primary-brand)] w-8 h-8" />
+                  </Link>
                 </div>
               ) : (
                 <div className="hidden md:flex items-center space-x-2">
-                  <button onClick={() => openAuthModalAsLogin(true)} className="px-6 py-2 text-lg font-semibold text-[var(--text-secondary)] hover:text-[var(--primary-brand)] transition-colors duration-300">Login</button>
-                  <button onClick={() => openAuthModalAsLogin(false)} className="px-6 py-2 text-lg font-semibold text-white bg-[var(--buttons-highlight)] rounded-lg hover:opacity-90 transition-opacity shadow-md">Sign Up</button>
+                  <button
+                    onClick={() => openAuthModalAsLogin(true)}
+                    className="px-6 py-2 text-lg font-semibold text-[var(--text-secondary)] hover:text-[var(--primary-brand)] transition-colors duration-300"
+                  >
+                    Login
+                  </button>
+                  <button
+                    onClick={() => openAuthModalAsLogin(false)}
+                    className="px-6 py-2 text-lg font-semibold text-white bg-[var(--buttons-highlight)] rounded-lg hover:opacity-90 transition-opacity shadow-md"
+                  >
+                    Sign Up
+                  </button>
                 </div>
               )}
             </div>
@@ -108,39 +141,68 @@ const Header: React.FC = () => {
           <div className="md:hidden bg-[var(--background-light)] border-t border-gray-200">
             <nav className="px-4 pt-4 pb-6 space-y-2">
               {navLinks.map((link) => {
-                 const isActive = pathname === link.href;
-                return(
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={`block px-4 py-3 rounded-lg text-base font-semibold ${isActive ? 'text-[var(--primary-brand)] bg-gray-200' : 'text-[var(--text-secondary)] hover:text-[var(--primary-brand)] hover:bg-gray-100'}`}
-                  onClick={() => setMenuOpen(false)}
-                >
-                  {link.label}
-                </Link>
-              )})}
-               {!isLoggedIn ? (
+                const isActive = pathname === link.href;
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className={`block px-4 py-3 rounded-lg text-base font-semibold ${
+                      isActive
+                        ? "text-[var(--primary-brand)] bg-gray-200"
+                        : "text-[var(--text-secondary)] hover:text-[var(--primary-brand)] hover:bg-gray-100"
+                    }`}
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    {link.label}
+                  </Link>
+                );
+              })}
+              {!isLoggedIn ? (
                 <div className="border-t border-gray-200 mt-4 pt-4 space-y-3">
-                    <button onClick={() => openAuthModalAsLogin(true)} className="block w-full text-left px-4 py-3 rounded-lg text-base font-semibold text-[var(--text-secondary)] hover:bg-gray-100">Login</button>
-                    <button onClick={() => openAuthModalAsLogin(false)} className="block w-full text-center px-4 py-3 rounded-lg text-base font-semibold text-white bg-[var(--buttons-highlight)] hover:opacity-90">Sign Up</button>
+                  <button
+                    onClick={() => openAuthModalAsLogin(true)}
+                    className="block w-full text-left px-4 py-3 rounded-lg text-base font-semibold text-[var(--text-secondary)] hover:bg-gray-100"
+                  >
+                    Login
+                  </button>
+                  <button
+                    onClick={() => openAuthModalAsLogin(false)}
+                    className="block w-full text-center px-4 py-3 rounded-lg text-base font-semibold text-white bg-[var(--buttons-highlight)] hover:opacity-90"
+                  >
+                    Sign Up
+                  </button>
                 </div>
-                ) : (
+              ) : (
                 <div className="border-t border-gray-200 mt-4 pt-4 space-y-3">
-                    <Link href="/profile" className="block px-4 py-3 rounded-lg text-base font-semibold text-[var(--text-secondary)] hover:text-[var(--primary-brand)] hover:bg-gray-100" onClick={() => setMenuOpen(false)}>
-                        Profile
-                    </Link>
-                    <button onClick={() => { logout(); setMenuOpen(false); }} className="block w-full text-left px-4 py-3 rounded-lg text-base font-semibold text-[var(--text-secondary)] hover:bg-gray-100">
-                        Logout
-                    </button>
+                  <Link
+                    href="/profile/current-orders"
+                    className="block px-4 py-3 rounded-lg text-base font-semibold text-[var(--text-secondary)] hover:text-[var(--primary-brand)] hover:bg-gray-100"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    Profile
+                  </Link>
+                  <button
+                    onClick={() => {
+                      logout();
+                      setMenuOpen(false);
+                    }}
+                    className="block w-full text-left px-4 py-3 rounded-lg text-base font-semibold text-[var(--text-secondary)] hover:bg-gray-100"
+                  >
+                    Logout
+                  </button>
                 </div>
-                )}
+              )}
             </nav>
           </div>
         )}
       </header>
 
       <SlidingCartModal isOpen={isCartOpen} onClose={closeCart} />
-      <AuthModal isOpen={isAuthModalOpen} onClose={closeAuthModal} isLogin={isLogin} />
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={closeAuthModal}
+        isLogin={isLogin}
+      />
     </>
   );
 };
