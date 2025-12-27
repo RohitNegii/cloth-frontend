@@ -28,7 +28,7 @@ export default function NewArrivals() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const data = await getProducts();
+        const data:any = await getProducts();
         setProducts(data);
       } catch (error) {
         console.error("Failed to fetch products:", error);

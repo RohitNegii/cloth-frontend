@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+//@ts-ignore
 import "slick-carousel/slick/slick.css";
+//@ts-ignore
 import "slick-carousel/slick/slick-theme.css";
+//@ts-ignore
 import "./globals.css";
-import { Toaster } from 'react-hot-toast';
+import { Toaster } from "react-hot-toast";
 import Script from "next/script";
 import AuthProvider from "@/component/layout/AuthProvider";
 
@@ -29,9 +32,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable}`}
-      >
+      <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <AuthProvider>
           <Toaster />
           {children}

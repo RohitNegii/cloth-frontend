@@ -16,7 +16,7 @@ interface BannerSlide {
   price: string;
 }
 
-export default function Banner(): JSX.Element {
+export default function Banner() {
   const settings: Settings = {
     dots: true,
     infinite: true,

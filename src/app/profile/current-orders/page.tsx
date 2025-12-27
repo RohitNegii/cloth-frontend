@@ -167,7 +167,7 @@ const getStatusIndex = (status: string) => statusSteps.indexOf(status);
 
               {/* ITEMS */}
               <div className="mt-10 space-y-4">
-                {order.items.map((item) => (
+                {order.items.map((item:any) => (
                   <div
                     key={item._id}
                     className="flex gap-4 items-center bg-gray-50 p-3 rounded-xl hover:bg-gray-100 transition"

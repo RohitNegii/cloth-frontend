@@ -20,7 +20,7 @@ const PastOrdersPage = () => {
 
   const fetchOrders = async () => {
     try {
-      const response = await getMyOrders();
+      const response:any = await getMyOrders();
       const pastOrders = response.data.filter(
         (order: any) => order.status === "delivered"
       );

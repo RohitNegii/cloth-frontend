@@ -69,6 +69,7 @@ export default function ProductDetailPage() {
     const fetchProduct = async () => {
       try {
         // Calls the mock API function and gets the structured data
+        //@ts-ignore
         const productData: any = await getProductById(params.id);
 
         setProduct(productData);
@@ -92,7 +93,7 @@ export default function ProductDetailPage() {
     } else {
       try {
         await addToCart(product._id, 1, selectedSize, selectedColor);
-        const response = await getCartCount();
+        const response:any = await getCartCount();
         setCartCount(response.count);
         openCart();
       } catch (error) {
