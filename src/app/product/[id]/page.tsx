@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -93,7 +92,7 @@ export default function ProductDetailPage() {
     } else {
       try {
         await addToCart(product._id, 1, selectedSize, selectedColor);
-        const response:any = await getCartCount();
+        const response: any = await getCartCount();
         setCartCount(response.count);
         openCart();
       } catch (error) {
@@ -118,19 +117,23 @@ export default function ProductDetailPage() {
             {/* Image Gallery */}
             <div className="flex flex-col-reverse md:flex-row gap-4">
               <div className="flex md:flex-col gap-4 overflow-x-auto md:overflow-y-auto">
-                {product.images.map((img: string, idx: number) => (
-                  <img
-                    key={idx}
-                    src={img}
-                    alt={`${product.name} - view ${idx + 1}`}
-                    className={`w-24 h-24 object-cover rounded-lg cursor-pointer border-2 ${
-                      mainImage === img
-                        ? "border-[var(--primary-brand)]"
-                        : "border-transparent"
-                    }`}
-                    onClick={() => setMainImage(img)}
-                  />
-                ))}
+                {product?.images.length > 0 && (
+                  <>
+                    {product?.images?.map((img: string, idx: number) => (
+                      <img
+                        key={idx}
+                        src={img}
+                        alt={`${product.name} - view ${idx + 1}`}
+                        className={`w-24 h-24 object-cover rounded-lg cursor-pointer border-2 ${
+                          mainImage === img
+                            ? "border-[var(--primary-brand)]"
+                            : "border-transparent"
+                        }`}
+                        onClick={() => setMainImage(img)}
+                      />
+                    ))}
+                  </>
+                )}
               </div>
               <div className="flex-1">
                 <img
@@ -177,19 +180,23 @@ export default function ProductDetailPage() {
               <div className="mb-6">
                 <h3 className="text-lg font-semibold mb-3">Size:</h3>
                 <div className="flex gap-3">
-                  {product.sizes.map((size: string) => (
-                    <button
-                      key={size}
-                      onClick={() => setSelectedSize(size)}
-                      className={`px-6 py-2 rounded-md border-2 font-semibold ${
-                        selectedSize === size
-                          ? "bg-[var(--primary-brand)] text-white border-[var(--primary-brand)]"
-                          : "bg-transparent text-[var(--text-primary)] border-gray-300 hover:border-[var(--primary-brand)]"
-                      }`}
-                    >
-                      {size}
-                    </button>
-                  ))}
+                  {product?.sizes.length > 0 && (
+                    <>
+                      {product?.sizes?.map((size: string) => (
+                        <button
+                          key={size}
+                          onClick={() => setSelectedSize(size)}
+                          className={`px-6 py-2 rounded-md border-2 font-semibold ${
+                            selectedSize === size
+                              ? "bg-[var(--primary-brand)] text-white border-[var(--primary-brand)]"
+                              : "bg-transparent text-[var(--text-primary)] border-gray-300 hover:border-[var(--primary-brand)]"
+                          }`}
+                        >
+                          {size}
+                        </button>
+                      ))}
+                    </>
+                  )}
                 </div>
               </div>
 

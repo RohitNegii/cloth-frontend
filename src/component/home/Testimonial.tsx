@@ -64,20 +64,23 @@ export default function CustomerTestimonials() {
   return (
     <section className="py-14 bg-[var(--contrast-light-2)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="text-center mb-16">
+        <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-extrabold text-[var(--primary-brand)] tracking-tight">
             What Our Customers Say
           </h2>
           <p className="mt-4 text-lg text-[var(--text-secondary)] max-w-2xl mx-auto">
             We are proud to have a community of happy customers.
           </p>
-          </div>
+        </div>
         <Slider {...settings}>
+          {testimonials?.length>0&&<>
           {testimonials.map((testimonial) => (
             <div key={testimonial.id} className="p-4">
               <div className="bg-white rounded-lg shadow-lg p-8 h-full flex flex-col">
                 <FaQuoteLeft className="text-[var(--secondary-accent)] text-3xl mb-4" />
-                <p className="text-[var(--text-secondary)] italic mb-6 flex-grow">{testimonial.review}</p>
+                <p className="text-[var(--text-secondary)] italic mb-6 flex-grow">
+                  {testimonial.review}
+                </p>
                 <div className="flex items-center">
                   <img
                     src={testimonial.photo}
@@ -85,13 +88,18 @@ export default function CustomerTestimonials() {
                     className="w-12 h-12 rounded-full object-cover mr-4"
                   />
                   <div>
-                    <h4 className="text-lg font-semibold text-[var(--primary-brand)]">{testimonial.name}</h4>
-                    <p className="text-[var(--text-secondary)]">{testimonial.role}</p>
+                    <h4 className="text-lg font-semibold text-[var(--primary-brand)]">
+                      {testimonial.name}
+                    </h4>
+                    <p className="text-[var(--text-secondary)]">
+                      {testimonial.role}
+                    </p>
                   </div>
                 </div>
               </div>
             </div>
           ))}
+          </>}
         </Slider>
       </div>
     </section>
