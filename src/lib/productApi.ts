@@ -1,23 +1,26 @@
-import api from './api';
+import api from "./api";
 
 export const getProducts = async () => {
   try {
-    const response = await api.get('/products');
-    return response.data;
+    const response = await api.get("/products");
+    if (Array.isArray(response.data)) {
+      return response.data;
+    }
+    return [];
   } catch (error) {
-    console.error('Error fetching products:', error);
+    console.error("Error fetching products:", error);
     throw error;
   }
 };
 
 export const getProductById = async (id: string) => {
-    try {
-        const response = await api.get(`/products/${id}`);
-        return response.data;
-    } catch (error) {
-        console.error(`Error fetching product with id ${id}:`, error);
-        throw error;
-    }
+  try {
+    const response = await api.get(`/products/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching product with id ${id}:`, error);
+    throw error;
+  }
 };
 
 type AddReviewPayload = {
@@ -32,5 +35,5 @@ export const addReview = (data: AddReviewPayload) => {
 };
 
 export const getReviews = (productId: string) => {
-    return api.get(`/reviews/product/${productId}`);
+  return api.get(`/reviews/product/${productId}`);
 };
