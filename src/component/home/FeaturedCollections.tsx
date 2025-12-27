@@ -12,7 +12,7 @@ const collectionsData = [
       "Embrace the cold with our latest collection of winter essentials. Featuring luxurious textures, warm fabrics, and contemporary silhouettes designed to keep you stylishly cozy.",
     imageUrl:
       "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=1200&q=80",
-    ctaLink: "/collections/winter-24",
+    ctaLink: "#",
     status: "active",
   },
   {
@@ -101,7 +101,7 @@ export default function FeaturedCollections() {
               {activeCollection.description}
             </p>
             <Link
-              href={activeCollection.ctaLink!}
+              href={activeCollection?.ctaLink! || "#"}
               className="mt-8 bg-[var(--buttons-highlight)] text-white px-8 py-3 rounded-lg font-bold text-lg hover:bg-opacity-90 transition-all duration-300 transform hover:scale-105 shadow-xl"
             >
               Shop Now
