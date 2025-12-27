@@ -117,7 +117,7 @@ export default function ProductDetailPage() {
             {/* Image Gallery */}
             <div className="flex flex-col-reverse md:flex-row gap-4">
               <div className="flex md:flex-col gap-4 overflow-x-auto md:overflow-y-auto">
-                {product?.images.length > 0 && (
+                {product?.images?.length > 0 && (
                   <>
                     {product?.images?.map((img: string, idx: number) => (
                       <img
@@ -180,7 +180,7 @@ export default function ProductDetailPage() {
               <div className="mb-6">
                 <h3 className="text-lg font-semibold mb-3">Size:</h3>
                 <div className="flex gap-3">
-                  {product?.sizes.length > 0 && (
+                  {product?.sizes?.length > 0 && (
                     <>
                       {product?.sizes?.map((size: string) => (
                         <button
@@ -204,19 +204,23 @@ export default function ProductDetailPage() {
               <div className="mb-8">
                 <h3 className="text-lg font-semibold mb-3">Color:</h3>
                 <div className="flex gap-3">
-                  {product.colors.map((color: string) => (
-                    <button
-                      key={color}
-                      onClick={() => setSelectedColor(color)}
-                      className={`w-10 h-10 rounded-full border-2 ${
-                        selectedColor === color
-                          ? "border-[var(--primary-brand)]"
-                          : "border-transparent"
-                      }`}
-                      style={{ backgroundColor: color.toLowerCase() }}
-                      title={color}
-                    />
-                  ))}
+                  {product?.colors?.length > 0 && (
+                    <>
+                      {product.colors.map((color: string) => (
+                        <button
+                          key={color}
+                          onClick={() => setSelectedColor(color)}
+                          className={`w-10 h-10 rounded-full border-2 ${
+                            selectedColor === color
+                              ? "border-[var(--primary-brand)]"
+                              : "border-transparent"
+                          }`}
+                          style={{ backgroundColor: color.toLowerCase() }}
+                          title={color}
+                        />
+                      ))}
+                    </>
+                  )}
                 </div>
               </div>
 
@@ -247,33 +251,37 @@ export default function ProductDetailPage() {
             Related Items
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
-            {relatedProducts.map((relatedProduct) => (
-              <div
-                key={relatedProduct.id}
-                className="group relative bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
-              >
-                <Link href={relatedProduct.ctaLink}>
-                  <div className="relative w-full h-64 overflow-hidden">
-                    <img
-                      src={relatedProduct.imageUrl}
-                      alt={relatedProduct.name}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                    />
+            {relatedProducts?.length > 0 && (
+              <>
+                {relatedProducts.map((relatedProduct) => (
+                  <div
+                    key={relatedProduct.id}
+                    className="group relative bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
+                  >
+                    <Link href={relatedProduct.ctaLink}>
+                      <div className="relative w-full h-64 overflow-hidden">
+                        <img
+                          src={relatedProduct.imageUrl}
+                          alt={relatedProduct.name}
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                        />
+                      </div>
+                      <div className="p-4">
+                        <p className="text-sm text-gray-500 mb-1">
+                          {relatedProduct.category}
+                        </p>
+                        <h3 className="text-lg font-bold text-gray-900 truncate">
+                          {relatedProduct.name}
+                        </h3>
+                        <p className="text-xl font-extrabold text-gray-900 mt-2">
+                          {relatedProduct.price}
+                        </p>
+                      </div>
+                    </Link>
                   </div>
-                  <div className="p-4">
-                    <p className="text-sm text-gray-500 mb-1">
-                      {relatedProduct.category}
-                    </p>
-                    <h3 className="text-lg font-bold text-gray-900 truncate">
-                      {relatedProduct.name}
-                    </h3>
-                    <p className="text-xl font-extrabold text-gray-900 mt-2">
-                      {relatedProduct.price}
-                    </p>
-                  </div>
-                </Link>
-              </div>
-            ))}
+                ))}
+              </>
+            )}
           </div>
         </div>
       </div>

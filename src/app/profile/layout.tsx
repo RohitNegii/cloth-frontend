@@ -38,33 +38,37 @@ export default function ProfileLayout({
               </div>
 
               <nav className="space-y-2 flex-1">
-                {menu.map((item) => {
-                  const isActive = pathname === item.href;
-                  const Icon = item.icon;
+                {menu?.length > 0 && (
+                  <>
+                    {menu.map((item) => {
+                      const isActive = pathname === item.href;
+                      const Icon = item.icon;
 
-                  return (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      className={`relative flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all
+                      return (
+                        <Link
+                          key={item.href}
+                          href={item.href}
+                          className={`relative flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all
                         ${
                           isActive
                             ? "bg-[var(--primary-brand)] text-white"
                             : "text-gray-600 hover:bg-gray-100"
                         }`}
-                    >
-                      <Icon size={18} />
-                      {item.name}
+                        >
+                          <Icon size={18} />
+                          {item.name}
 
-                      {isActive && (
-                        <motion.span
-                          layoutId="activeSidebar"
-                          className="absolute inset-0 rounded-xl bg-[var(--primary-brand)] -z-10"
-                        />
-                      )}
-                    </Link>
-                  );
-                })}
+                          {isActive && (
+                            <motion.span
+                              layoutId="activeSidebar"
+                              className="absolute inset-0 rounded-xl bg-[var(--primary-brand)] -z-10"
+                            />
+                          )}
+                        </Link>
+                      );
+                    })}
+                  </>
+                )}
               </nav>
 
               <button className="mt-6 flex items-center gap-2 text-sm text-red-500 hover:text-red-600">
