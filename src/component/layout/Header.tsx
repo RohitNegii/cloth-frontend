@@ -1,9 +1,14 @@
-'use client';
+"use client";
 import React, { useState, useEffect } from "react";
-import { HiOutlineShoppingCart, HiOutlineMenu, HiOutlineX, HiOutlineUserCircle } from "react-icons/hi";
+import {
+  HiOutlineShoppingCart,
+  HiOutlineMenu,
+  HiOutlineX,
+  HiOutlineUserCircle,
+} from "react-icons/hi";
 import SlidingCartModal from "./CartDropdown";
 import Link from "next/link";
-import { usePathname } from 'next/navigation';
+import { usePathname } from "next/navigation";
 import AuthModal from "./AuthModal";
 import useUserStore from "@/store/userStore";
 import useCartStore from "@/store/cartStore";
@@ -11,9 +16,11 @@ import useAuthModalStore from "@/store/authModalStore";
 import { getCartCount } from "@/lib/cartApi";
 
 const Header: React.FC = () => {
-  const { isCartOpen, openCart, closeCart, cartCount, setCartCount } = useCartStore();
+  const { isCartOpen, openCart, closeCart, cartCount, setCartCount } =
+    useCartStore();
   const [menuOpen, setMenuOpen] = useState(false);
-  const { isAuthModalOpen, openAuthModal, closeAuthModal } = useAuthModalStore();
+  const { isAuthModalOpen, openAuthModal, closeAuthModal } =
+    useAuthModalStore();
   const [isLogin, setIsLogin] = useState(true);
   const { user, logout } = useUserStore();
   const isLoggedIn = !!user;
@@ -23,7 +30,7 @@ const Header: React.FC = () => {
     const fetchCartCount = async () => {
       if (isLoggedIn) {
         try {
-          const response:any = await getCartCount();
+          const response: any = await getCartCount();
           setCartCount(response.data.count);
         } catch (error) {
           console.error("Failed to fetch cart count:", error);
@@ -69,7 +76,7 @@ const Header: React.FC = () => {
             <div className="flex-shrink-0">
               <Link href="/">
                 <img
-                  src="https://i.ibb.co/Vt0wS0v/logo-removebg-preview.png"
+                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQC9y7z7X-vkzJtsQeTkSNMpEX61WTkZq_yBw&s"
                   alt="Uncommon Threads Logo"
                   className="h-20 w-auto"
                 />
