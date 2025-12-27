@@ -20,8 +20,15 @@ export const getProductById = async (id: string) => {
     }
 };
 
-export const addReview = (productId: string, rating: number, comment: string) => {
-    return api.post(`/reviews`, { product: productId, rating, comment });
+type AddReviewPayload = {
+  orderId: string;
+  productId: string;
+  rating: number;
+  comment?: string;
+};
+
+export const addReview = (data: AddReviewPayload) => {
+  return api.post("/reviews/add", data);
 };
 
 export const getReviews = (productId: string) => {
