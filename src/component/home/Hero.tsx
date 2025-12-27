@@ -132,7 +132,7 @@ export default function Banner() {
                     </div>
                     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                       <Link
-                        href={slide.ctaLink}
+                        href={slide?.ctaLink || "#"}
                         className="bg-[var(--buttons-highlight)] hover:bg-[var(--buttons-highlight)]/90 text-white px-8 py-3 rounded-lg font-semibold transition-colors inline-flex items-center gap-2 focus:outline-none focus:ring-4 focus:ring-[var(--buttons-highlight)]/60"
                       >
                         {slide.ctaText}
@@ -160,7 +160,7 @@ export default function Banner() {
                   <div className="hidden md:block">
                     <div className="relative">
                       <img
-                        src={slide.image}
+                        src={slide?.image}
                         alt={slide.title}
                         className="w-full h-80 object-cover rounded-lg shadow-2xl border-4 border-[var(--secondary-accent)]"
                         loading="lazy"
