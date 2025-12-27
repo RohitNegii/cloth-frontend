@@ -18,30 +18,41 @@ export default function NewsletterSignup() {
 
   return (
     <section className="relative py-14 bg-[var(--background-light)] overflow-hidden">
-        <div 
-            className="absolute inset-0 bg-cover bg-center opacity-10"
-            style={{backgroundImage: `url('https://images.unsplash.com/photo-1559523161-0d4d06921946?auto=format&fit=crop&w=1500&q=80')`}}
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-[var(--background-light)] via-[var(--background-light)]/80 to-[var(--background-light)]"/>
+      <div
+        className="absolute inset-0 bg-cover bg-center opacity-10"
+        style={{
+          backgroundImage: `url('https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=1200&q=80')`,
+        }}
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-[var(--background-light)] via-[var(--background-light)]/80 to-[var(--background-light)]" />
       <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <div>
           <h2 className="text-4xl md:text-5xl font-extrabold text-[var(--primary-brand)] tracking-tight">
             Join Our Style Circle
           </h2>
           <p className="mt-4 text-lg text-[var(--text-secondary)] max-w-2xl mx-auto">
-            Be the first to know about new arrivals, exclusive collections, and special offers. Subscribe to our newsletter today.
+            Be the first to know about new arrivals, exclusive collections, and
+            special offers. Subscribe to our newsletter today.
           </p>
         </div>
         <div className="mt-12 max-w-xl mx-auto">
           {isSubmitted ? (
             <div className="flex items-center justify-center bg-green-100 text-green-800 p-4 rounded-lg shadow-md">
-                <FiCheckCircle className="mr-3 text-2xl"/>
-                <p className="text-lg font-semibold">Thank you for subscribing! Welcome to the circle.</p>
+              <FiCheckCircle className="mr-3 text-2xl" />
+              <p className="text-lg font-semibold">
+                Thank you for subscribing! Welcome to the circle.
+              </p>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="relative flex flex-col sm:flex-row gap-4 items-center">
+            <form
+              onSubmit={handleSubmit}
+              className="relative flex flex-col sm:flex-row gap-4 items-center"
+            >
               <div className="relative flex-grow w-full">
-                <FiMail className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-secondary)]" size={22}/>
+                <FiMail
+                  className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-secondary)]"
+                  size={22}
+                />
                 <input
                   type="email"
                   placeholder="Enter your email address"
