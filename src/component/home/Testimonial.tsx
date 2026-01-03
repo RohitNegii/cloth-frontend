@@ -73,8 +73,8 @@ export default function CustomerTestimonials() {
           </p>
         </div>
         <Slider {...settings}>
-          {testimonials?.length>0&&<>
-          {testimonials.map((testimonial) => (
+          {testimonials?.length>0&&
+          testimonials.map((testimonial) => (
             <div key={testimonial.id} className="p-4">
               <div className="bg-white rounded-lg shadow-lg p-8 h-full flex flex-col">
                 <FaQuoteLeft className="text-[var(--secondary-accent)] text-3xl mb-4" />
@@ -98,8 +98,8 @@ export default function CustomerTestimonials() {
                 </div>
               </div>
             </div>
-          ))}
-          </>}
+          ))
+          }
         </Slider>
       </div>
     </section>

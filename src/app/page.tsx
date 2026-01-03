@@ -9,6 +9,7 @@ import Layout from "@/component/layout/Layout";
 import ShippingFeatures from "@/component/home/ShippingFeatures"; // Corrected import path
 import React from "react";
 
+
 const page = () => {
   return (
     <Layout>
