@@ -6,6 +6,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 //@ts-ignore
 import "./globals.css";
+
 import { Toaster } from "react-hot-toast";
 import Script from "next/script";
 import AuthProvider from "@/component/layout/AuthProvider";
@@ -34,7 +35,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <AuthProvider>
-          <Toaster />
+          <Toaster position="top-right" />
           {children}
           <Script src="https://checkout.razorpay.com/v1/checkout.js" />
         </AuthProvider>

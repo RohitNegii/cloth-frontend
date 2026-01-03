@@ -85,7 +85,7 @@ const SlidingCartModal: React.FC<SlidingCartModalProps> = ({
           _id: item._id,
         })) || [];
       setCart(items);
-      const countResponse:any = await getCartCount();
+      const countResponse: any = await getCartCount();
       setCartCount(countResponse.count);
     } catch (error) {
       console.error("Error removing from cart:", error);
@@ -111,7 +111,7 @@ const SlidingCartModal: React.FC<SlidingCartModalProps> = ({
           _id: item._id,
         })) || [];
       setCart(items);
-      const countResponse:any = await getCartCount();
+      const countResponse: any = await getCartCount();
       setCartCount(countResponse.count);
     } catch (error) {
       console.error("Error updating cart item:", error);
@@ -173,7 +173,7 @@ const SlidingCartModal: React.FC<SlidingCartModalProps> = ({
             </p>
           ) : (
             <ul className="space-y-4">
-              {cartItems.map((item:any) => (
+              {cartItems.map((item: any) => (
                 <li
                   key={item.product}
                   className="flex gap-4 p-4 rounded-xl border shadow hover:shadow-md transition"

@@ -34,8 +34,8 @@ export const trackOrder = (orderId: string) => {
   return api.get(`/orders/${orderId}/track`);
 };
 
-export const getMyOrders = () => {
-  return api.get("/orders/my-orders");
+export const getMyOrders = (type:string) => {
+  return api.get(`/orders/my-orders?type=${type}`); 
 };
 
 // Admin route
